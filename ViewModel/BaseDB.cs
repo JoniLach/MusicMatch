@@ -29,7 +29,7 @@ namespace ViewModel
         protected BaseDB()
         {
             // Fixed connection string format (Data Source must be on same token)
-            this.connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=C:\Users\310\Downloads\MusicMatch(09-12)\ViewModel\NavAppDB.accdb;Persist Security Info=True;";
+            this.connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=.\NavAppDB.accdb;Persist Security Info=True;";
 
             this.connection = new OleDbConnection(this.connectionString);
             this.command = new OleDbCommand();

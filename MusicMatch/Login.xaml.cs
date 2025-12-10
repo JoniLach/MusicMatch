@@ -41,18 +41,30 @@ namespace MusicMatch
             }
             else
             {
-
+                // Try teacher login first
                 TeacherDB tdb = new TeacherDB();
                 Teacher teacher = tdb.Login(username, password);
 
                 if (teacher != null)
                 {
+                    MainWindow.LoggedInUser = teacher;
                     MainFrame.Navigate(new SearchPage());
+                    return;
                 }
-                else
+
+                // If not a teacher, try student login
+                StudentDB sdb = new StudentDB();
+                Student student = sdb.Login(username, password);
+
+                if (student != null)
                 {
-                    MessageBox.Show("Invalid username or password.", "Login failed", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MainWindow.LoggedInUser = student;
+                    MainFrame.Navigate(new SearchPage());
+                    return;
                 }
+
+                // Neither teacher nor student
+                MessageBox.Show("Invalid username or password.", "Login failed", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

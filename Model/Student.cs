@@ -9,7 +9,8 @@ namespace Model
     public class Student : User
     {
         private int rating;
+        private int instId;
         public int Rating { get => rating; set => rating = value; }
-
+        public int InstId { get => instId; set => instId = value; }
     }
 }
