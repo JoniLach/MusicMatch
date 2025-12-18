@@ -72,9 +72,23 @@
     <Compile Include="Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="InstrumentSelectionPage.xaml.cs">
+      <DependentUpon>InstrumentSelectionPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="InstrumentSelectionDialog.xaml.cs">
+      <DependentUpon>InstrumentSelectionDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="StudentHomePage.xaml.cs">
       <DependentUpon>StudentHomePage.xaml</DependentUpon>
     </Compile>
+    <Page Include="InstrumentSelectionPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="InstrumentSelectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>

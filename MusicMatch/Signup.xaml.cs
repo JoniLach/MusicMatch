@@ -61,17 +61,14 @@ namespace MusicMatch
                 {
                     TeacherDB db = new TeacherDB();
                     db.Insert(teacher);
-                    db.SaveChanges();
-                    NavigationService?.Navigate(new Login());
+                    db.SaveChanges(); // This updates teacher.Id
+                    MainWindow.LoggedInUser = teacher; // Set globally
+                    NavigationService?.Navigate(new InstrumentSelectionPage(teacher));
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
-
-                NavigationService?.Navigate(new Login());
-
             }
             else
             {
@@ -89,15 +86,14 @@ namespace MusicMatch
                 {
                     StudentDB db = new StudentDB();
                     db.Insert(student);
-                    db.SaveChanges();
-                    NavigationService?.Navigate(new Login());
+                    db.SaveChanges(); // This updates student.Id
+                    MainWindow.LoggedInUser = student; // Set globally
+                    NavigationService?.Navigate(new InstrumentSelectionPage(student));
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
-
-
             }
         }
 

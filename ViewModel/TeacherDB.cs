@@ -28,7 +28,20 @@ namespace ViewModel
 
         public override string CreateUpdateSQL(BaseEntity entity)
         {
-            throw new NotImplementedException();
+            Teacher teacher = entity as Teacher;
+            string sqlStr = $"UPDATE tblTeacher SET Price = {teacher.Price}, AmountOfJobs = {teacher.AmountOfJobs}, Rating = {teacher.Rating} WHERE id = {teacher.Id}";
+            return sqlStr;
+        }
+
+        public override void Update(BaseEntity entity)
+        {
+            Teacher teacher = entity as Teacher;
+
+            if (teacher != null)
+            {
+                this.updated.Add(new ChangeEntity(base.CreateUpdateSQL, entity));
+                this.updated.Add(new ChangeEntity(this.CreateUpdateSQL, entity));
+            }
         }
 
         protected override BaseEntity NewEntity()

@@ -4,7 +4,6 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MusicMatch"
-      xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
       mc:Ignorable="d" 
       d:DesignHeight="700" d:DesignWidth="1000"
       Title="Settings"
@@ -15,13 +14,14 @@
             <Setter Property="Background" Value="#2A2A2A"/>
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Padding" Value="12"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="MinHeight" Value="40"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
                         <Border CornerRadius="6" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                            <ScrollViewer x:Name="PART_ContentHost"/>
+                            <ScrollViewer x:Name="PART_ContentHost" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -35,100 +35,100 @@
 
     <Grid>
         <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <StackPanel Margin="40" MaxWidth="800" HorizontalAlignment="Center">
+            <StackPanel Margin="40,50" Width="400">
                 
                 <!-- Header -->
                 <TextBlock Text="Account Settings" FontSize="32" FontWeight="Bold" Foreground="White" Margin="0,0,0,10"/>
-                <TextBlock Text="Manage your profile and account details" FontSize="16" Foreground="#B3B3B3" Margin="0,0,0,40"/>
+                <TextBlock Text="Manage your profile and account details" FontSize="16" Foreground="#B3B3B3" Margin="0,0,0,50"/>
 
                 <!-- Profile Section -->
-                <Border Background="#1E1E1E" CornerRadius="12" Padding="30" Margin="0,0,0,20">
+                <Border Background="#1E1E1E" CornerRadius="12" Padding="40" Margin="0,0,0,25">
                     <StackPanel>
-                        <TextBlock Text="Personal Information" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
+                        <TextBlock Text="Personal Information" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,30"/>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             
                             <!-- First Name -->
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="First Name" Foreground="#B3B3B3" Margin="0,0,0,8"/>
-                                <TextBox x:Name="txtFirstName" Text="{Binding FirstName}"/>
+                                <TextBlock Text="First Name" Foreground="#B3B3B3" Margin="0,0,0,10"/>
+                                <TextBox x:Name="txtFirstName"/>
                             </StackPanel>
 
                             <!-- Last Name -->
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Last Name" Foreground="#B3B3B3" Margin="0,0,0,8"/>
-                                <TextBox x:Name="txtLastName" Text="{Binding LastName}"/>
+                                <TextBlock Text="Last Name" Foreground="#B3B3B3" Margin="0,0,0,10"/>
+                                <TextBox x:Name="txtLastName"/>
                             </StackPanel>
                         </Grid>
 
-                        <TextBlock Text="Email Address" Foreground="#B3B3B3" Margin="0,20,0,8"/>
-                        <TextBox x:Name="txtEmail" Text="{Binding Email}"/>
+                        <TextBlock Text="Email Address" Foreground="#B3B3B3" Margin="0,25,0,10"/>
+                        <TextBox x:Name="txtEmail"/>
                         
-                        <TextBlock Text="City" Foreground="#B3B3B3" Margin="0,20,0,8"/>
-                        <TextBox x:Name="txtCity" Text="{Binding City}"/>
+                        <TextBlock Text="City" Foreground="#B3B3B3" Margin="0,25,0,10"/>
+                        <TextBox x:Name="txtCity"/>
 
-                        <TextBlock Text="Username" Foreground="#B3B3B3" Margin="0,20,0,8"/>
-                        <TextBox x:Name="txtUsername" Text="{Binding UserName}" IsReadOnly="True" Opacity="0.7" ToolTip="Username cannot be changed"/>
+                        <TextBlock Text="Username" Foreground="#B3B3B3" Margin="0,25,0,10"/>
+                        <TextBox x:Name="txtUsername" IsReadOnly="True" Opacity="0.6" ToolTip="Username cannot be changed"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Security Section -->
-                <Border Background="#1E1E1E" CornerRadius="12" Padding="30" Margin="0,0,0,20">
+                <Border Background="#1E1E1E" CornerRadius="12" Padding="40" Margin="0,0,0,25">
                     <StackPanel>
-                        <TextBlock Text="Security" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
+                        <TextBlock Text="Security" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,30"/>
                         
-                        <TextBlock Text="Password" Foreground="#B3B3B3" Margin="0,0,0,8"/>
-                        <PasswordBox x:Name="txtPassword" Background="#2A2A2A" Foreground="White" BorderThickness="0" Padding="10" FontSize="14"/>
-                        <TextBlock Text="Leave blank to keep current password" FontSize="12" Foreground="#666666" Margin="0,4,0,0"/>
+                        <TextBlock Text="Password" Foreground="#B3B3B3" Margin="0,0,0,10"/>
+                        <PasswordBox x:Name="txtPassword" Background="#2A2A2A" Foreground="White" BorderThickness="0" Padding="12" FontSize="14" MinHeight="40"/>
+                        <TextBlock Text="Leave blank to keep current password" FontSize="12" Foreground="#666666" Margin="0,8,0,0"/>
                     </StackPanel>
                 </Border>
 
                 <!-- Teacher Specific Section (Visible only if Teacher) -->
-                <Border x:Name="pnlTeacherSettings" Background="#1E1E1E" CornerRadius="12" Padding="30" Margin="0,0,0,20" Visibility="Collapsed">
+                <Border x:Name="pnlTeacherSettings" Background="#1E1E1E" CornerRadius="12" Padding="40" Margin="0,0,0,25" Visibility="Collapsed">
                     <StackPanel>
-                        <TextBlock Text="Teacher Profile" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
+                        <TextBlock Text="Teacher Profile" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,30"/>
 
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="30"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
                             <StackPanel Grid.Column="0">
-                                <TextBlock Text="Hourly Rate (ILS)" Foreground="#B3B3B3" Margin="0,0,0,8"/>
+                                <TextBlock Text="Hourly Rate (ILS)" Foreground="#B3B3B3" Margin="0,0,0,10"/>
                                 <TextBox x:Name="txtPrice"/>
                             </StackPanel>
 
                             <StackPanel Grid.Column="2">
-                                <TextBlock Text="Jobs Completed" Foreground="#B3B3B3" Margin="0,0,0,8"/>
-                                <TextBox x:Name="txtJobs" IsReadOnly="True" Opacity="0.7"/>
+                                <TextBlock Text="Jobs Completed" Foreground="#B3B3B3" Margin="0,0,0,10"/>
+                                <TextBox x:Name="txtJobs" IsReadOnly="True" Opacity="0.6"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
                 </Border>
 
                 <!-- Action Buttons -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                    <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Background="Transparent" Foreground="White" Margin="0,0,10,0" Width="100" Height="40">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,20,0,0">
+                    <Button x:Name="btnCancel" Click="btnCancel_Click" Content="Cancel" Background="Transparent" Foreground="White" Margin="0,0,15,0" Width="120" Height="45">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border CornerRadius="20" BorderBrush="#333333" BorderThickness="1" Background="Transparent">
+                                <Border CornerRadius="22" BorderBrush="#333333" BorderThickness="2" Background="Transparent">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
                     
-                    <Button x:Name="btnSave" Click="btnSave_Click" Content="Save Changes" Background="#1DB954" Foreground="White" FontWeight="Bold" Width="140" Height="40">
+                    <Button x:Name="btnSave" Click="btnSave_Click" Content="Save Changes" Background="#1DB954" Foreground="White" FontWeight="Bold" Width="160" Height="45">
                          <Button.Template>
                             <ControlTemplate TargetType="Button">
-                                <Border x:Name="border" CornerRadius="20" Background="#1DB954">
+                                <Border x:Name="border" CornerRadius="22" Background="#1DB954">
                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Border>
                                 <ControlTemplate.Triggers>
