@@ -14,6 +14,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Collections.Specialized.BitVector32;
 using ViewModel;
+using Model;
 
 namespace MusicMatch
 {
@@ -30,25 +31,74 @@ namespace MusicMatch
         {
             string username = txtUser.Text?.Trim();
             string password = txtPass.Password;
+            string email = txtEmail.Text?.Trim();
+            string firstName = txtFirstName.Text?.Trim();
+            string lastName = txtLastName.Text?.Trim();
+            string city = txtCity.Text?.Trim();
+            bool isTeacher = chkIsTeacher.IsChecked == true;
 
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(email) || string.IsNullOrEmpty(firstName) ||
+                string.IsNullOrEmpty(lastName) || string.IsNullOrEmpty(city))
             {
-                MessageBox.Show("Please enter username and password.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Please fill in all fields.", "Validation", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
-            //TeacherDB tdb = new TeacherDB();
-            //bool created = tdb.CreateTeacherAccount(username, password);
+            if (isTeacher)
+            {
+                var teacher = new Teacher
+                {
+                    UserName = username,
+                    Password = password,
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    City = city
+                };
 
-            //if (created)
-            //{
-            //    MessageBox.Show("Account created. You can now log in.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-            //    NavigationService?.Navigate(new Login());
-            //}
-            //else
-            //{
-            //    MessageBox.Show("Failed to create account. The username may already exist or the database is inaccessible.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
+                try
+                {
+                    TeacherDB db = new TeacherDB();
+                    db.Insert(teacher);
+                    db.SaveChanges();
+                    NavigationService?.Navigate(new Login());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
+                NavigationService?.Navigate(new Login());
+
+            }
+            else
+            {
+                var student = new Student
+                {
+                    UserName = username,
+                    Password = password,
+                    Email = email,
+                    FirstName = firstName,
+                    LastName = lastName,
+                    City = city
+                };
+
+                try 
+                {
+                    StudentDB db = new StudentDB();
+                    db.Insert(student);
+                    db.SaveChanges();
+                    NavigationService?.Navigate(new Login());
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+
+
+            }
         }
 
         private void SwitchToLogIn_Click(object sender, RoutedEventArgs e)

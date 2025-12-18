@@ -18,7 +18,12 @@ namespace ViewModel
 
         public override string CreateInsertSQL(BaseEntity entity)
         {
-            throw new NotImplementedException();
+            Teacher teacher = entity as Teacher;
+            string sqlStr = $@"INSERT INTO tblTeacher 
+                                (id, Rating, Price, AmountOfJobs)
+                                VALUES 
+                                ({teacher.Id}, {teacher.Rating}, {teacher.Price}, {teacher.AmountOfJobs})";
+            return sqlStr;
         }
 
         public override string CreateUpdateSQL(BaseEntity entity)
@@ -41,7 +46,16 @@ namespace ViewModel
             teacher.Price = (int)this.reader["Price"];
             teacher.AmountOfJobs = (int)this.reader["AmountOfJobs"];
         }
+        public override void Insert(BaseEntity entity)
+        {
+            Teacher teacher = entity as Teacher;
 
+            if (teacher != null)
+            {
+                this.inserted.Add(new ChangeEntity(base.CreateInsertSQL, entity));
+                this.inserted.Add(new ChangeEntity(this.CreateInsertSQL, entity));
+            }
+        }
         public Teacher Login(string username, string password)
         {
             // Corrected SQL query with the missing FROM clause
@@ -62,5 +76,16 @@ namespace ViewModel
             return null;
         }
 
+        public TeacherList SelectAll()
+        {
+            this.command.CommandText = @"
+                SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
+                        tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
+                        tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs
+                FROM    tblTeacher 
+                INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id";
+
+            return new TeacherList(base.Select());
+        }
     }
 }

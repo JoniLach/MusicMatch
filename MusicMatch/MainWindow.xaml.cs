@@ -45,9 +45,14 @@ namespace MusicMatch
         private void Search_Click(object sender, RoutedEventArgs e)
         {
             if (LoggedInUser != null)
-                MainFrame.Navigate(new SearchPage());
+            {
+                if (LoggedInUser is Student)
+                    MainFrame.Navigate(new StudentHomePage());
+                else
+                    MainFrame.Navigate(new SearchPage());
+            }
             else
-                MessageBox.Show("Must log in first or create and account.");
+                MessageBox.Show("Must log in first or create an account.");
         }
 
         private void Settings_Click(object sender, RoutedEventArgs e)

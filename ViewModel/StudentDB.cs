@@ -16,7 +16,12 @@ namespace ViewModel
 
         public override string CreateInsertSQL(BaseEntity entity)
         {
-            throw new NotImplementedException();
+            Student student = entity as Student;
+            string sqlStr = $@"INSERT INTO tblStudent 
+                                (id, StudentRating)
+                                VALUES 
+                                ({student.Id}, {student.Rating})";
+            return sqlStr;
         }
 
         public override string CreateUpdateSQL(BaseEntity entity)
@@ -48,7 +53,16 @@ namespace ViewModel
             if (hasColumn("InstId") && this.reader["InstId"] != DBNull.Value)
                 student.InstId = Convert.ToInt32(this.reader["InstId"]);
         }
+        public override void Insert(BaseEntity entity)
+        {
+            Student student = entity as Student;
 
+            if (student != null)
+            {
+                this.inserted.Add(new ChangeEntity(base.CreateInsertSQL, entity));
+                this.inserted.Add(new ChangeEntity(this.CreateInsertSQL, entity));
+            }
+        }
 
         protected override BaseEntity NewEntity()
         {

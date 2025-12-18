@@ -48,7 +48,7 @@
                        Foreground="White" Margin="12" />
             <Button Content="&#x1F50D;  Search" Click="Search_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5" />
-            <Button Content="&#x2699;  A User" Click="Settings_Click"
+            <Button Content="&#x2699;  Settings" Click="Settings_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5" />
             <Button Content="&#128488;  Chats" Click="Chat_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5"/>

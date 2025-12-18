@@ -137,79 +137,80 @@ namespace ViewModel
         }
 
 
-        //public virtual void Insert(BaseEntity entity)
-        //{
-        //    BaseEntity reqEntity = this.NewEntity();
+        public virtual void Insert(BaseEntity entity)
+        {
+            BaseEntity reqEntity = this.NewEntity();
 
-        //    if (entity != null && entity.GetType() == reqEntity.GetType())
-        //        this.inserted.Add(new ChangeEntity(this.CreateInsertSQL,entity));
-        //}
+            if (entity != null && entity.GetType() == reqEntity.GetType())
+                this.inserted.Add(new ChangeEntity(this.CreateInsertSQL, entity));
+        }
 
-        //public virtual void Update(BaseEntity entity)
-        //{
-        //    BaseEntity reqEntity = this.NewEntity();
+        public virtual void Update(BaseEntity entity)
+        {
+            BaseEntity reqEntity = this.NewEntity();
 
-        //    if (entity != null && entity.GetType() == reqEntity.GetType())
-        //        this.updated.Add(new ChangeEntity(this.CreateUpdateSQL, entity));
-        //}
-        //public virtual void Delete(BaseEntity entity)
-        //{
-        //    BaseEntity reqEntity = this.NewEntity();
+            if (entity != null && entity.GetType() == reqEntity.GetType())
+                this.updated.Add(new ChangeEntity(this.CreateUpdateSQL, entity));
+        }
+        public virtual void Delete(BaseEntity entity)
+        {
+            BaseEntity reqEntity = this.NewEntity();
 
-        //    if (entity != null && entity.GetType() == reqEntity.GetType())
-        //        this.deleted.Add(new ChangeEntity(this.CreateDeleteSQL, entity));
-        //}
+            if (entity != null && entity.GetType() == reqEntity.GetType())
+                this.deleted.Add(new ChangeEntity(this.CreateDeleteSQL, entity));
+        }
 
         public abstract string CreateInsertSQL(BaseEntity entity);
         public abstract string CreateUpdateSQL(BaseEntity entity);
         public abstract string CreateDeleteSQL(BaseEntity entity);
 
-        //public int SaveChanges()
-        //{
-        //    int records = 0;
-        //    OleDbCommand cmd = new OleDbCommand();
+        public int SaveChanges()
+        {
+            int records = 0;
+            OleDbCommand cmd = new OleDbCommand();
 
-        //    try
-        //    {
-        //        cmd.Connection = this.connection;                
-        //        this.connection.Open();
+            try
+            {
+                cmd.Connection = this.connection;
+                this.connection.Open();
 
-        //        foreach (ChangeEntity item in this.inserted)
-        //        {
-        //            cmd.CommandText = item.CreateSQL(item.Entity);
-        //            records += cmd.ExecuteNonQuery();
+                foreach (ChangeEntity item in this.inserted)
+                {
+                    cmd.CommandText = item.CreateSQL(item.Entity);
+                    records += cmd.ExecuteNonQuery();
 
-        //            cmd.CommandText = "Select @@Identity";
-        //            item.Entity.Id = (int)cmd.ExecuteScalar();
-        //        }
+                    cmd.CommandText = "Select @@Identity";
+                    item.Entity.Id = (int)cmd.ExecuteScalar();
+                }
 
-        //        foreach (ChangeEntity item in this.updated)
-        //        {
-        //            cmd.CommandText = item.CreateSQL(item.Entity);
-        //            records += cmd.ExecuteNonQuery();
-        //        }
+                foreach (ChangeEntity item in this.updated)
+                {
+                    cmd.CommandText = item.CreateSQL(item.Entity);
+                    records += cmd.ExecuteNonQuery();
+                }
 
-        //        foreach (ChangeEntity item in this.deleted)
-        //        {
-        //            cmd.CommandText = item.CreateSQL(item.Entity);
-        //            records += cmd.ExecuteNonQuery();
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.Write(ex.Message + "\nSQL: " + cmd.CommandText);
-        //    }
-        //    finally
-        //    {
-        //        inserted.Clear();
-        //        updated.Clear();
-        //        deleted.Clear();
+                foreach (ChangeEntity item in this.deleted)
+                {
+                    cmd.CommandText = item.CreateSQL(item.Entity);
+                    records += cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.Write(ex.Message + "\nSQL: " + cmd.CommandText);
+                throw;
+            }
+            finally
+            {
+                inserted.Clear();
+                updated.Clear();
+                deleted.Clear();
 
-        //        if (this.connection.State == ConnectionState.Open)
-        //            this.connection.Close();
-        //    }
+                if (this.connection.State == ConnectionState.Open)
+                    this.connection.Close();
+            }
 
-        //    return records;
-        //}
+            return records;
+        }
     }
 }

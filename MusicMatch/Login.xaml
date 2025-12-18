@@ -24,18 +24,16 @@
                     </Border.BorderBrush>
                     <Grid>
                         <StackPanel
-                        Grid.Row="1"
                         Width="220"
                         Margin="0,35,0,0"
                         Orientation="Vertical">
                             <TextBlock
                                 Height="30"
-                                VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 FontSize="25"
                                 FontWeight="Medium"
                                 Foreground="White"
-                                Text="The last letter" />
+                                Text="Music Match" />
                             <TextBlock
                             Margin="0,60,0,0"
                             FontSize="12"

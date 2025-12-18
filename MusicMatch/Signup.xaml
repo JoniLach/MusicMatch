@@ -24,60 +24,37 @@
                         </LinearGradientBrush>
                     </Border.BorderBrush>
                     <Grid>
-                        <StackPanel
-                        Grid.Row="1"
-                        Width="220"
-                        Margin="0,35,0,0"
-                        Orientation="Vertical">
-
-
+                        <StackPanel Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" Width="300">
                             <TextBlock
                                 Height="30"
-                                VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
                                 FontSize="25"
                                 FontWeight="Medium"
                                 Foreground="White"
-                                Text="The last letter" />
-                            <TextBlock
-                            Margin="0,60,0,0"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Foreground="DarkGray"
-                            Text="Username"/>
-                            <TextBox
-                            x:Name="txtUser"
-                            Height="28"
-                            Margin="0,5,0,0"
-                            VerticalContentAlignment="Center"
-                            Background="Transparent"
-                            BorderBrush="DarkGray"
-                            BorderThickness="0,0,0,2"
-                            CaretBrush="LightGray"
-                            FontSize="13"
-                            FontWeight="Bold"
-                            Foreground="White"/>
-                            <TextBlock
-                            Margin="0,15,0,0"
-                            FontSize="12"
-                            FontWeight="Bold"
-                            Foreground="DarkGray"
-                            Text="Password" />
-                            <PasswordBox
-                            x:Name="txtPass"
-                            Height="28"
-                            Margin="0,5,0,0"
-                            VerticalContentAlignment="Center"
-                            BorderBrush="DarkGray"
-                            BorderThickness="0,0,0,2"
-                            CaretBrush="LightGray"
-                            FontSize="13"
-                            FontWeight="Bold"
-                            Foreground="White"/>
+                                Text="Music Match" />
+                            <TextBlock Text="Username" Foreground="LightGray"/>
+                            <TextBox x:Name="txtUser" Margin="0,0,0,10" Foreground="White"/>
+
+                            <TextBlock Text="Password" Foreground="LightGray"/>
+                            <PasswordBox x:Name="txtPass" Margin="0,0,0,10" Foreground="White" />
+
+                            <TextBlock Text="Email" Foreground="LightGray" />
+                            <TextBox x:Name="txtEmail" Margin="0,0,0,10" Foreground="White"/>
+
+                            <TextBlock Text="First Name" Foreground="LightGray"/>
+                            <TextBox x:Name="txtFirstName" Margin="0,0,0,10" Foreground="White"/>
+
+                            <TextBlock Text="Last Name" Foreground="LightGray"/>
+                            <TextBox x:Name="txtLastName" Margin="0,0,0,10" Foreground="White"/>
+
+                            <TextBlock Text="City" Foreground="LightGray"/>
+                            <TextBox x:Name="txtCity" Margin="0,0,0,10" Foreground="White" />
+
+                            <CheckBox x:Name="chkIsTeacher" Content="Sign up as a teacher" Margin="0,0,0,10" Foreground="LightGray"/>
+
 
                             <Button
                             x:Name="btnSignUp"
-                            Margin="0,30,0,0"
                             Click="btnSignUp_Click"
                             Content="SIGN UP"
                             Cursor="Hand"
@@ -121,6 +98,7 @@
                                 </Button.Template>
                             </Button>
                         </StackPanel>
+
                     </Grid>
                 </Border>
 

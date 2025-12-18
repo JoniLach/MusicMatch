@@ -59,7 +59,7 @@ namespace MusicMatch
                 if (student != null)
                 {
                     MainWindow.LoggedInUser = student;
-                    MainFrame.Navigate(new SearchPage());
+                    MainFrame.Navigate(new StudentHomePage());
                     return;
                 }
 
