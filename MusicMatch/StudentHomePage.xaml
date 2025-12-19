@@ -87,12 +87,83 @@
         <!-- Main Content -->
         <Grid Grid.Row="1" Margin="20">
             <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/> <!-- Upcoming -->
+                <RowDefinition Height="Auto"/> <!-- History -->
                 <RowDefinition Height="Auto"/> <!-- Search/Filter -->
                 <RowDefinition Height="*"/>    <!-- List -->
             </Grid.RowDefinitions>
 
+            <!-- Upcoming Sessions -->
+             <!-- Upcoming Sessions -->
+            <!-- Upcoming Sessions -->
+            <Border Grid.Row="0" Background="#1E1E1E" CornerRadius="12" Padding="20" Margin="0,20,0,30" x:Name="bdUpcoming" Visibility="Collapsed">
+                <StackPanel>
+                        <TextBlock Text="📅 My Upcoming Sessions" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
+                        <ItemsControl x:Name="lstUpcoming">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="#2A2A2A" CornerRadius="8" Padding="15" Margin="0,0,10,10" Width="200">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding TeacherName, StringFormat='Lesson with {0}'}" Foreground="White" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+                                            <TextBlock Text="{Binding LessonDate, StringFormat=d}" Foreground="#DDDDDD" FontSize="12" Margin="0,5,0,0"/>
+                                            <TextBlock Text="{Binding StartTime}" Foreground="#BBBBBB" FontSize="12" Margin="0,2,0,0"/>
+                                            <Border Background="#1DB954" CornerRadius="4" Padding="8,3" HorizontalAlignment="Left" Margin="0,8,0,0">
+                                                <TextBlock Text="UPCOMING" FontSize="10" Foreground="White" FontWeight="Bold"/>
+                                            </Border>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                </StackPanel>
+            </Border>
+
+            <!-- Past Sessions (History) -->
+            <Border Grid.Row="1" Background="#1E1E1E" CornerRadius="12" Padding="20" Margin="0,0,0,30" x:Name="bdHistory" Visibility="Collapsed">
+                <StackPanel>
+                    <TextBlock Text="📜 History &amp; Ratings" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
+                    <ItemsControl x:Name="lstHistory">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Border Background="#2A2A2A" CornerRadius="8" Padding="15" Margin="0,0,10,10" Width="220">
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding TeacherName, StringFormat='Lesson with {0}'}" Foreground="White" FontWeight="Bold" FontSize="14" TextWrapping="Wrap"/>
+                                        <TextBlock Text="{Binding LessonDate, StringFormat=d}" Foreground="#999999" FontSize="12" Margin="0,5,0,0"/>
+                                        
+                                        <Button Content="⭐ Rate Teacher" Click="btnRate_Click" Tag="{Binding}" Margin="0,10,0,0" Height="30" Background="#333333" Foreground="#FFD700" BorderThickness="0" Cursor="Hand">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="border" CornerRadius="4" Background="{TemplateBinding Background}">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="border" Property="Background" Value="#444444"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                        </Button>
+                                    </StackPanel>
+                                </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </Border>
+
             <!-- Search Bar -->
-            <Grid Grid.Row="0" Margin="0,0,0,20">
+            <Grid Grid.Row="2" Margin="0,0,0,20">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="300"/>
                     <ColumnDefinition Width="*"/>
@@ -114,7 +185,7 @@
             </Grid>
 
             <!-- Teachers List -->
-            <ListView x:Name="lvTeachers" Grid.Row="1" BorderThickness="0" Background="Transparent" 
+            <ListView x:Name="lvTeachers" Grid.Row="3" BorderThickness="0" Background="Transparent" 
                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                       MouseDoubleClick="lvTeachers_MouseDoubleClick">
                 <ListView.ItemTemplate>

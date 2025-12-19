@@ -27,8 +27,68 @@ namespace MusicMatch
         public StudentHomePage()
         {
             InitializeComponent();
+            InitializeComponent();
             LoadTeachers();
             DisplayUserInfo();
+            LoadUpcoming();
+        }
+
+        private void LoadUpcoming()
+        {
+             if (MainWindow.LoggedInUser == null) return;
+             try
+             {
+                 LessonDB db = new LessonDB();
+                 
+                 // Load Upcoming
+                 var upcoming = db.GetUpcomingLessons(MainWindow.LoggedInUser.Id, false);
+                 if (upcoming.Count > 0)
+                 {
+                     lstUpcoming.ItemsSource = upcoming;
+                     bdUpcoming.Visibility = Visibility.Visible;
+                 }
+                 else
+                 {
+                     bdUpcoming.Visibility = Visibility.Collapsed;
+                 }
+
+                 // Load History
+                 var history = db.GetPastLessons(MainWindow.LoggedInUser.Id, false);
+                 if (history.Count > 0)
+                 {
+                     lstHistory.ItemsSource = history;
+                     bdHistory.Visibility = Visibility.Visible;
+                 }
+                 else
+                 {
+                     bdHistory.Visibility = Visibility.Collapsed;
+                 }
+             }
+             catch { }
+        }
+
+        private void btnRate_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is Button btn && btn.Tag is Lesson lesson)
+            {
+                var dialog = new RateUserDialog(lesson.TeacherName);
+                if (dialog.ShowDialog() == true)
+                {
+                    try
+                    {
+                        TeacherDB teacherDB = new TeacherDB();
+                        teacherDB.AddRating(lesson.TeacherId, dialog.SelectedRating);
+                        MessageBox.Show("Rating submitted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        
+                        // Reload teachers to show updated rating
+                        LoadTeachers();
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error submitting rating: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
 
         private void DisplayUserInfo()

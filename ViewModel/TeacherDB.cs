@@ -19,17 +19,19 @@ namespace ViewModel
         public override string CreateInsertSQL(BaseEntity entity)
         {
             Teacher teacher = entity as Teacher;
+            string desc = teacher.Description?.Replace("'", "''") ?? ""; // Escape single quotes
             string sqlStr = $@"INSERT INTO tblTeacher 
-                                (id, Rating, Price, AmountOfJobs)
+                                (id, Rating, Price, AmountOfJobs, Description)
                                 VALUES 
-                                ({teacher.Id}, {teacher.Rating}, {teacher.Price}, {teacher.AmountOfJobs})";
+                                ({teacher.Id}, {teacher.Rating}, {teacher.Price}, {teacher.AmountOfJobs}, '{desc}')";
             return sqlStr;
         }
 
         public override string CreateUpdateSQL(BaseEntity entity)
         {
             Teacher teacher = entity as Teacher;
-            string sqlStr = $"UPDATE tblTeacher SET Price = {teacher.Price}, AmountOfJobs = {teacher.AmountOfJobs}, Rating = {teacher.Rating} WHERE id = {teacher.Id}";
+            string desc = teacher.Description?.Replace("'", "''") ?? ""; // Escape single quotes
+            string sqlStr = $"UPDATE tblTeacher SET Price = {teacher.Price}, AmountOfJobs = {teacher.AmountOfJobs}, Rating = {teacher.Rating}, Description = '{desc}' WHERE id = {teacher.Id}";
             return sqlStr;
         }
 
@@ -55,9 +57,10 @@ namespace ViewModel
 
             base.CreateModel(entity);
 
-            teacher.Rating = (int)this.reader["Rating"];
-            teacher.Price = (int)this.reader["Price"];
+            teacher.Rating = Convert.ToDouble(this.reader["Rating"]);
+            teacher.Price = Convert.ToDouble(this.reader["Price"]);
             teacher.AmountOfJobs = (int)this.reader["AmountOfJobs"];
+            teacher.Description = this.reader["Description"]?.ToString() ?? "";
         }
         public override void Insert(BaseEntity entity)
         {
@@ -75,7 +78,7 @@ namespace ViewModel
             this.command.CommandText = $@"
         SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
                 tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
-                tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs
+                tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs, tblTeacher.Description
         FROM    tblTeacher 
         INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id
         WHERE tblUsers.Username = '{username}' AND tblUsers.[Password] = '{password}'";
@@ -94,11 +97,34 @@ namespace ViewModel
             this.command.CommandText = @"
                 SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
                         tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
-                        tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs
+                        tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs, tblTeacher.Description
                 FROM    tblTeacher 
                 INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id";
 
             return new TeacherList(base.Select());
+        }
+        public void AddRating(int teacherId, int newRating)
+        {
+            // Get current rating info
+            this.command.CommandText = $"SELECT Rating, AmountOfJobs FROM tblTeacher WHERE id = {teacherId}";
+            var list = base.Select();
+            if (list.Count > 0)
+            {
+                Teacher teacher = list[0] as Teacher;
+                if (teacher != null)
+                {
+                    double currentRating = teacher.Rating;
+                    int jobs = teacher.AmountOfJobs;
+
+                    // Calculate new average
+                    double updatedRating = ((currentRating * jobs) + newRating) / (jobs + 1);
+                    int updatedJobs = jobs + 1;
+
+                    // Update DB
+                    this.command.CommandText = $"UPDATE tblTeacher SET Rating = {updatedRating}, AmountOfJobs = {updatedJobs} WHERE id = {teacherId}";
+                    this.command.ExecuteNonQuery();
+                }
+            }
         }
     }
 }

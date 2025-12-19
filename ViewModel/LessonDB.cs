@@ -76,6 +76,79 @@ namespace ViewModel
             return new LessonList(base.Select());
         }
 
+        public LessonList GetUpcomingLessons(int userId, bool isTeacher)
+        {
+            // Get current date and time for filtering
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string currentTime = DateTime.Now.ToString("HH:mm");
+            
+            if (isTeacher)
+            {
+                 // For teachers: get future lessons that are booked
+                 this.command.CommandText = $@"
+                    SELECT tblLessons.*, 
+                           TeacherUser.FirstName AS TeacherName, 
+                           StudentUser.FirstName AS StudentName
+                    FROM ((tblLessons 
+                    LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
+                    LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                    WHERE tblLessons.TeacherId = {userId} 
+                      AND (tblLessons.StudentId IS NOT NULL AND tblLessons.StudentId <> 0) 
+                      AND ((tblLessons.LessonDate > #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
+                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
+            }
+            else
+            {
+                 // For students: get their booked future lessons
+                 this.command.CommandText = $@"
+                    SELECT tblLessons.*, 
+                           TeacherUser.FirstName AS TeacherName, 
+                           StudentUser.FirstName AS StudentName
+                    FROM ((tblLessons 
+                    LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
+                    LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                    WHERE tblLessons.StudentId = {userId} 
+                      AND ((tblLessons.LessonDate > #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
+                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
+            }
+            return new LessonList(base.Select());
+        }
+
+        public LessonList GetPastLessons(int userId, bool isTeacher)
+        {
+            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string currentTime = DateTime.Now.ToString("HH:mm");
+            
+            if (isTeacher)
+            {
+                 this.command.CommandText = $@"
+                    SELECT tblLessons.*, 
+                           TeacherUser.FirstName AS TeacherName, 
+                           StudentUser.FirstName AS StudentName
+                    FROM ((tblLessons 
+                    LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
+                    LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                    WHERE tblLessons.TeacherId = {userId} 
+                      AND (tblLessons.StudentId IS NOT NULL AND tblLessons.StudentId <> 0) 
+                      AND ((tblLessons.LessonDate < #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime < '{currentTime}')) 
+                    ORDER BY tblLessons.LessonDate DESC, tblLessons.StartTime DESC";
+            }
+            else
+            {
+                 this.command.CommandText = $@"
+                    SELECT tblLessons.*, 
+                           TeacherUser.FirstName AS TeacherName, 
+                           StudentUser.FirstName AS StudentName
+                    FROM ((tblLessons 
+                    LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
+                    LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                    WHERE tblLessons.StudentId = {userId} 
+                      AND ((tblLessons.LessonDate < #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime < '{currentTime}')) 
+                    ORDER BY tblLessons.LessonDate DESC, tblLessons.StartTime DESC";
+            }
+            return new LessonList(base.Select());
+        }
+
         public LessonList GetStudentBookedSessions(int studentId)
         {
              this.command.CommandText = $"SELECT * FROM tblLessons WHERE StudentId = {studentId} ORDER BY LessonDate, StartTime";

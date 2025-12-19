@@ -20,6 +20,10 @@ namespace Model
         public string StartTime { get => startTime; set => startTime = value; }
         public int Duration { get => duration; set => duration = value; }
 
+        // Non-mapped properties for display
+        public string TeacherName { get; set; }
+        public string StudentName { get; set; }
+
         public bool IsBooked => StudentId != 0;
     }
 }

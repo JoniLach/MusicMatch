@@ -49,6 +49,8 @@
   <ItemGroup>
     <Compile Include="BaseEntity.cs" />
     <Compile Include="ChangeEntity.cs" />
+    <Compile Include="Notification.cs" />
+    <Compile Include="NotificationList.cs" />
     <Compile Include="Instrument.cs" />
     <Compile Include="InstrumentList.cs" />
     <Compile Include="Program.cs" />

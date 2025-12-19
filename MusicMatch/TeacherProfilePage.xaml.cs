@@ -20,11 +20,25 @@ namespace MusicMatch
     public partial class TeacherProfilePage : Page
     {
         private Teacher teacher;
+        private bool isEditMode = false;
+        private bool isOwnProfile = false;
 
         public TeacherProfilePage(Teacher selectedTeacher)
         {
             InitializeComponent();
             teacher = selectedTeacher;
+            
+            // Check if viewing own profile
+            if (MainWindow.LoggedInUser is Teacher loggedTeacher && loggedTeacher.Id == teacher.Id)
+            {
+                isOwnProfile = true;
+            }
+            else
+            {
+                // Hide edit button if not own profile
+                btnEditDescription.Visibility = Visibility.Collapsed;
+            }
+            
             LoadTeacherProfile();
         }
 
@@ -54,10 +68,12 @@ namespace MusicMatch
                 if (!string.IsNullOrEmpty(teacher.Description))
                 {
                     txtDescription.Text = teacher.Description;
+                    txtDescriptionEdit.Text = teacher.Description;
                 }
                 else
                 {
                     txtDescription.Text = $"{teacher.FirstName} is an experienced music teacher ready to help you achieve your musical goals.";
+                    txtDescriptionEdit.Text = "";
                 }
 
                 // Profile Picture (if available)
@@ -106,6 +122,54 @@ namespace MusicMatch
             {
                 MessageBox.Show($"Error loading instruments: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+        private void btnEditDescription_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isOwnProfile) return;
+
+            if (!isEditMode)
+            {
+                // Switch to edit mode
+                isEditMode = true;
+                txtDescription.Visibility = Visibility.Collapsed;
+                pnlEditDescription.Visibility = Visibility.Visible;
+                txtEditLabel.Text = "Save";
+                txtEditLabel.Foreground = new SolidColorBrush(Color.FromRgb(255, 165, 0)); // Orange
+            }
+            else
+            {
+                // Save changes
+                try
+                {
+                    teacher.Description = txtDescriptionEdit.Text.Trim();
+                    
+                    TeacherDB db = new TeacherDB();
+                    db.Update(teacher);
+                    db.SaveChanges();
+
+                    // Switch back to view mode
+                    isEditMode = false;
+                    txtDescription.Text = string.IsNullOrEmpty(teacher.Description) 
+                        ? $"{teacher.FirstName} is an experienced music teacher ready to help you achieve your musical goals." 
+                        : teacher.Description;
+                    txtDescription.Visibility = Visibility.Visible;
+                    pnlEditDescription.Visibility = Visibility.Collapsed;
+                    txtEditLabel.Text = "Edit";
+                    txtEditLabel.Foreground = new SolidColorBrush(Color.FromRgb(29, 185, 84)); // Green
+
+                    MessageBox.Show("Description updated successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Failed to save description: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void txtDescriptionEdit_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            txtCharCount.Text = $"{txtDescriptionEdit.Text.Length}/500 characters";
         }
 
         private void btnBack_Click(object sender, RoutedEventArgs e)

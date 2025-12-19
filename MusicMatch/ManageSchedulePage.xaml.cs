@@ -97,33 +97,4 @@ namespace MusicMatch
             NavigationService?.Navigate(new TeacherHomePage());
         }
     }
-
-    // Converters for UI status
-    public class StatusColorConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            bool isBooked = (bool)value;
-            return isBooked ? new SolidColorBrush(Color.FromRgb(220, 53, 69)) : new SolidColorBrush(Color.FromRgb(25, 135, 84)); // Red if booked, Green if free
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    public class StatusTextConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            bool isBooked = (bool)value;
-            return isBooked ? "BOOKED" : "AVAILABLE";
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
 }

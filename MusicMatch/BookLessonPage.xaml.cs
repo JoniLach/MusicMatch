@@ -110,6 +110,25 @@ namespace MusicMatch
                 {
                     lessonDB.BookLesson(lessonToBook, MainWindow.LoggedInUser.Id);
                     lessonDB.SaveChanges(); // Persist changes!
+                    
+                    // NOTIFY TEACHER
+                    try {
+                        NotificationDB noteDB = new NotificationDB();
+                        Notification note = new Notification() {
+                            UserId = lessonToBook.TeacherId,
+                            Message = $"New Booking: {MainWindow.LoggedInUser.FirstName} booked a lesson on {lessonToBook.LessonDate:d} at {lessonToBook.StartTime}",
+                            IsRead = false,
+                            CreatedAt = DateTime.Now
+                        };
+                        noteDB.Insert(note);
+                        noteDB.SaveChanges();
+                    } catch (Exception ex) {
+                        // Show error to user so they know the notification failed
+                        MessageBox.Show($"Lesson booked, but notification failed: {ex.Message}\n\nMake sure you created the tblNotifications table in your database.", 
+                            "Notification Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                        System.Diagnostics.Debug.WriteLine("Failed to notify teacher: " + ex.Message);
+                    }
+
                     MessageBox.Show("Lesson booked successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     
                     // Refresh

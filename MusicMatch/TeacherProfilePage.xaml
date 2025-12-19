@@ -77,8 +77,37 @@
                 <!-- About Section -->
                 <Border Background="#1E1E1E" CornerRadius="12" Padding="30" Margin="0,0,0,20">
                     <StackPanel>
-                        <TextBlock Text="About" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,15"/>
+                        <Grid Margin="0,0,0,15">
+                            <TextBlock Text="About" FontSize="20" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Left"/>
+                            <Button x:Name="btnEditDescription" Click="btnEditDescription_Click" HorizontalAlignment="Right" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="✏️" FontSize="16" Margin="0,0,5,0"/>
+                                    <TextBlock x:Name="txtEditLabel" Text="Edit" FontSize="14" Foreground="#1DB954"/>
+                                </StackPanel>
+                            </Button>
+                        </Grid>
+                        
+                        <!-- Read-only view -->
                         <TextBlock x:Name="txtDescription" Text="No description available." FontSize="14" Foreground="#B3B3B3" TextWrapping="Wrap" LineHeight="22"/>
+                        
+                        <!-- Edit view -->
+                        <StackPanel x:Name="pnlEditDescription" Visibility="Collapsed">
+                            <TextBox x:Name="txtDescriptionEdit" 
+                                     FontSize="14" 
+                                     Padding="12" 
+                                     Background="#2A2A2A" 
+                                     Foreground="White" 
+                                     BorderBrush="#444444" 
+                                     BorderThickness="1"
+                                     TextWrapping="Wrap"
+                                     AcceptsReturn="True"
+                                     MinHeight="150"
+                                     MaxLength="500"
+                                     VerticalScrollBarVisibility="Auto"
+                                     TextChanged="txtDescriptionEdit_TextChanged"/>
+                            <TextBlock x:Name="txtCharCount" Text="0/500 characters" FontSize="11" Foreground="#666666" 
+                                       HorizontalAlignment="Right" Margin="0,5,0,0"/>
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 

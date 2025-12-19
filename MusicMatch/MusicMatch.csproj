@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Converters.cs" />
     <Compile Include="Signup.xaml.cs">
       <DependentUpon>Signup.xaml</DependentUpon>
     </Compile>
@@ -84,6 +85,9 @@
     <Compile Include="TeacherProfilePage.xaml.cs">
       <DependentUpon>TeacherProfilePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RateUserDialog.xaml.cs">
+      <DependentUpon>RateUserDialog.xaml</DependentUpon>
+    </Compile>
     <Page Include="InstrumentSelectionPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -97,6 +101,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="TeacherProfilePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RateUserDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

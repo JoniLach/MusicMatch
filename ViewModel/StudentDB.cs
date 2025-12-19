@@ -110,5 +110,24 @@ namespace ViewModel
 
             return null;
         }
+        public void AddRating(int studentId, int newRating)
+        {
+            // Get current rating info
+            this.command.CommandText = $"SELECT StudentRating FROM tblStudent WHERE id = {studentId}";
+            var list = base.Select();
+            if (list.Count > 0)
+            {
+                Student student = list[0] as Student;
+                if (student != null)
+                {
+                    int currentRating = student.Rating;
+                    
+                    int finalRating = currentRating == 0 ? newRating : (currentRating + newRating) / 2;
+                    
+                    this.command.CommandText = $"UPDATE tblStudent SET StudentRating = {finalRating} WHERE id = {studentId}";
+                    this.command.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
