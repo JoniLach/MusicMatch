@@ -18,6 +18,7 @@ namespace ViewModel
             user.FirstName = this.reader["FirstName"].ToString();
             user.LastName = this.reader["LastName"].ToString();
             user.UserName = this.reader["UserName"].ToString();
+            user.Password = this.reader["Password"].ToString();
             user.Email = this.reader["Email"].ToString();
             user.City = this.reader["City"].ToString();
         }

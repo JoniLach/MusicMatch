@@ -41,7 +41,14 @@ namespace MusicMatch
                 txtJobs.Text = $"{teacher.AmountOfJobs} jobs completed";
 
                 // Initial for avatar
-                txtInitial.Text = teacher.FirstName.Substring(0, 1).ToUpper();
+                if (!string.IsNullOrEmpty(teacher.FirstName))
+                {
+                    txtInitial.Text = teacher.FirstName.Substring(0, 1).ToUpper();
+                }
+                else
+                {
+                    txtInitial.Text = "T";
+                }
 
                 // Description
                 if (!string.IsNullOrEmpty(teacher.Description))
@@ -110,6 +117,11 @@ namespace MusicMatch
         {
             MessageBox.Show($"Contact feature coming soon!\n\nYou can reach {teacher.FirstName} at:\n{teacher.Email}", 
                 "Contact Teacher", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void btnBookLesson_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new BookLessonPage(teacher.Id));
         }
     }
 }

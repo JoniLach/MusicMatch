@@ -57,6 +57,8 @@
     <Compile Include="StudentList.cs" />
     <Compile Include="Teacher.cs" />
     <Compile Include="TeacherList.cs" />
+    <Compile Include="Lesson.cs" />
+    <Compile Include="LessonList.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserList.cs" />
   </ItemGroup>

@@ -52,6 +52,8 @@
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5" />
             <Button Content="&#128488;  Chats" Click="Chat_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5"/>
+            <Button Content="&#128197;  My Schedule" Click="Schedule_Click"
+                    Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5"/>
             <Button Content="&#127918;  Mini game" Click="MiniGame_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5"/>
         </StackPanel>

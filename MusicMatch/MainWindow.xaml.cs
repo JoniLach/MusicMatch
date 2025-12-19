@@ -92,7 +92,24 @@ namespace MusicMatch
             if (LoggedInUser != null)
                 MainFrame.Navigate(new UserPage());
             else
-                MessageBox.Show("Must log in first or create and account.");
+                MessageBox.Show("Must log in first or create an account.");
+        }
+
+        private void Schedule_Click(object sender, RoutedEventArgs e)
+        {
+             if (LoggedInUser != null)
+             {
+                 if (LoggedInUser is Teacher)
+                 {
+                     MainFrame.Navigate(new ManageSchedulePage());
+                 }
+                 else if (LoggedInUser is Student)
+                 {
+                     MainFrame.Navigate(new StudentSchedulePage());
+                 }
+             }
+             else
+                 MessageBox.Show("Must log in first or create and account.");
         }
     }
 }

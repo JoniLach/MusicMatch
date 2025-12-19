@@ -79,6 +79,11 @@ namespace MusicMatch
             NavigationService?.Navigate(new UserPage());
         }
 
+        private void btnManageSchedule_Click(object sender, RoutedEventArgs e)
+        {
+            NavigationService?.Navigate(new ManageSchedulePage());
+        }
+
         private void btnManageInstruments_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new InstrumentSelectionDialog(currentTeacher);

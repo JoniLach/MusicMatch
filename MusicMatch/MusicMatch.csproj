@@ -103,6 +103,15 @@
     <Compile Include="UserPage.xaml.cs">
       <DependentUpon>UserPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="BookLessonPage.xaml.cs">
+      <DependentUpon>BookLessonPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ManageSchedulePage.xaml.cs">
+      <DependentUpon>ManageSchedulePage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="StudentSchedulePage.xaml.cs">
+      <DependentUpon>StudentSchedulePage.xaml</DependentUpon>
+    </Compile>
     <Page Include="StudentHomePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -131,6 +140,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UserPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="BookLessonPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ManageSchedulePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="StudentSchedulePage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -84,7 +84,7 @@
                 <StackPanel>
                     <TextBlock Text="🎸 My Instruments" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,20"/>
                     
-                    <ScrollViewer MaxHeight="300" VerticalScrollBarVisibility="Auto">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto">
                         <ItemsControl x:Name="icInstruments">
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
@@ -120,6 +120,24 @@
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock Text="👤" FontSize="20" Margin="0,0,10,0"/>
                                         <TextBlock Text="View My Profile" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="border" Property="Background" Value="#333333"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button x:Name="btnManageSchedule" Click="btnManageSchedule_Click" Margin="0,0,0,15" Height="50" Background="#2A2A2A" BorderThickness="0">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="border" CornerRadius="8" Background="{TemplateBinding Background}" Padding="15">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="📅" FontSize="20" Margin="0,0,10,0"/>
+                                        <TextBlock Text="Manage Schedule" FontSize="14" Foreground="White" VerticalAlignment="Center"/>
                                     </StackPanel>
                                 </Border>
                                 <ControlTemplate.Triggers>
