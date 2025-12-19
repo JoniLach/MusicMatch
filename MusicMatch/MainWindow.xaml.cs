@@ -34,12 +34,27 @@ namespace MusicMatch
         }
         public MainWindow(User user)
         {
-
             InitializeComponent();
             LoggedInUser = user;
+            UpdateButtonText();
+            
+            // Navigate to appropriate home page based on user type
+            if (LoggedInUser is Student)
+                MainFrame.Navigate(new StudentHomePage());
+            else if (LoggedInUser is Teacher)
+                MainFrame.Navigate(new TeacherHomePage());
+        }
 
-
-            MainFrame.Navigate(new SearchPage());
+        private void UpdateButtonText()
+        {
+            if (LoggedInUser is Student)
+            {
+                btnSearchHome.Content = "🔍  Search";
+            }
+            else if (LoggedInUser is Teacher)
+            {
+                btnSearchHome.Content = "🏠  Home";
+            }
         }
 
         private void Search_Click(object sender, RoutedEventArgs e)
@@ -49,7 +64,7 @@ namespace MusicMatch
                 if (LoggedInUser is Student)
                     MainFrame.Navigate(new StudentHomePage());
                 else
-                    MainFrame.Navigate(new SearchPage());
+                    MainFrame.Navigate(new TeacherHomePage());
             }
             else
                 MessageBox.Show("Must log in first or create an account.");

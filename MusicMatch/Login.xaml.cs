@@ -48,23 +48,31 @@ namespace MusicMatch
                 if (teacher != null)
                 {
                     MainWindow.LoggedInUser = teacher;
-                    MainFrame.Navigate(new SearchPage());
-                    return;
+                    MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+                    if (mainWindow != null)
+                    {
+                        mainWindow.MainFrame.Navigate(new TeacherHomePage());
+                    }
                 }
-
-                // If not a teacher, try student login
-                StudentDB sdb = new StudentDB();
-                Student student = sdb.Login(username, password);
-
-                if (student != null)
+                else
                 {
-                    MainWindow.LoggedInUser = student;
-                    MainFrame.Navigate(new StudentHomePage());
-                    return;
+                    // If not a teacher, try student login
+                    StudentDB sdb = new StudentDB(); // Re-declare sdb here as it's in a new scope
+                    Student student = sdb.Login(username, password);
+                    if (student != null)
+                    {
+                        MainWindow.LoggedInUser = student;
+                        MainWindow mainWindow = Window.GetWindow(this) as MainWindow;
+                        if (mainWindow != null)
+                        {
+                            mainWindow.MainFrame.Navigate(new StudentHomePage());
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid username or password", "Login Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
                 }
-
-                // Neither teacher nor student
-                MessageBox.Show("Invalid username or password.", "Login failed", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 

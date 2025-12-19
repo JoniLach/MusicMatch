@@ -78,5 +78,13 @@ namespace MusicMatch
             MainWindow.LoggedInUser = null;
             NavigationService?.Navigate(new Login());
         }
+
+        private void lvTeachers_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            if (lvTeachers.SelectedItem is Teacher selectedTeacher)
+            {
+                NavigationService?.Navigate(new TeacherProfilePage(selectedTeacher));
+            }
+        }
     }
 }

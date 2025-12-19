@@ -99,7 +99,7 @@ namespace MusicMatch
                 if (currentUser is Student)
                     NavigationService?.Navigate(new StudentHomePage());
                 else
-                    NavigationService?.Navigate(new SearchPage());
+                    NavigationService?.Navigate(new TeacherHomePage());
             }
             catch (Exception ex)
             {

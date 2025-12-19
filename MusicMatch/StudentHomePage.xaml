@@ -114,7 +114,9 @@
             </Grid>
 
             <!-- Teachers List -->
-            <ListView x:Name="lvTeachers" Grid.Row="1" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListView x:Name="lvTeachers" Grid.Row="1" BorderThickness="0" Background="Transparent" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                      MouseDoubleClick="lvTeachers_MouseDoubleClick">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <Grid>

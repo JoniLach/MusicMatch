@@ -82,10 +82,10 @@
                             Foreground="White">
                                 <Button.Style>
                                     <Style TargetType="Button">
-                                        <Setter Property="Background" Value="#FF580758" />
+                                        <Setter Property="Background" Value="#1DB954" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#FFA038A0" />
+                                                <Setter Property="Background" Value="#1ED760" />
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>
@@ -98,7 +98,6 @@
                                         Background="{TemplateBinding Background}"
                                         CornerRadius="20">
                                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-
                                         </Border>
                                     </ControlTemplate>
                                 </Button.Template>

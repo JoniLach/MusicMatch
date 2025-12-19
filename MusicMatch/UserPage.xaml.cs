@@ -20,6 +20,7 @@ namespace MusicMatch
     public partial class UserPage : Page
     {
         private User currentUser;
+        private string selectedProfilePicturePath = null;
 
         public UserPage()
         {
@@ -39,6 +40,29 @@ namespace MusicMatch
                 txtUsername.Text = currentUser.UserName;
                 txtPassword.Password = currentUser.Password;
 
+                // Profile picture
+                if (!string.IsNullOrEmpty(currentUser.FirstName))
+                {
+                    txtProfileInitial.Text = currentUser.FirstName.Substring(0, 1).ToUpper();
+                }
+                else
+                {
+                    txtProfileInitial.Text = "U";
+                }
+                
+                if (!string.IsNullOrEmpty(currentUser.ProfilePicture) && System.IO.File.Exists(currentUser.ProfilePicture))
+                {
+
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(currentUser.ProfilePicture, UriKind.RelativeOrAbsolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    imgProfileBrush.ImageSource = bitmap;
+                    imgProfilePreview.Visibility = Visibility.Visible;
+                    txtProfileInitial.Visibility = Visibility.Collapsed;
+                }
+
                 if (currentUser is Teacher teacher)
                 {
                     pnlTeacherSettings.Visibility = Visibility.Visible;
@@ -47,6 +71,35 @@ namespace MusicMatch
                 }
             }
         }
+
+        private void btnBrowseProfilePic_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+            dlg.Title = "Select Profile Picture";
+
+            if (dlg.ShowDialog() == true)
+            {
+                selectedProfilePicturePath = dlg.FileName;
+                // Update preview
+                try
+                {
+                    BitmapImage bitmap = new BitmapImage();
+                    bitmap.BeginInit();
+                    bitmap.UriSource = new Uri(selectedProfilePicturePath, UriKind.Absolute);
+                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                    bitmap.EndInit();
+                    imgProfileBrush.ImageSource = bitmap;
+                    imgProfilePreview.Visibility = Visibility.Visible;
+                    txtProfileInitial.Visibility = Visibility.Collapsed;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error loading image: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
 
         private void btnSave_Click(object sender, RoutedEventArgs e)
         {
@@ -68,9 +121,12 @@ namespace MusicMatch
             currentUser.Email = txtEmail.Text;
             currentUser.City = txtCity.Text;
 
-            // Only update password if changed (and not empty if that's a requirement, but here we allow keeping old one if logic allows, 
-            // though the simple binding above sets it to current. If they clear it, we might want to check. 
-            // For now, let's assume whatever is in the box is the desired password)
+            // Update profile picture if changed
+            if (!string.IsNullOrEmpty(selectedProfilePicturePath))
+            {
+                currentUser.ProfilePicture = selectedProfilePicturePath;
+            }
+
             if (!string.IsNullOrEmpty(txtPassword.Password))
             {
                 currentUser.Password = txtPassword.Password;
@@ -108,7 +164,7 @@ namespace MusicMatch
                 if (currentUser is Student)
                     NavigationService?.Navigate(new StudentHomePage());
                 else
-                    NavigationService?.Navigate(new SearchPage());
+                    NavigationService?.Navigate(new TeacherHomePage());
             }
             catch (Exception ex)
             {
@@ -121,7 +177,7 @@ namespace MusicMatch
             if (currentUser is Student)
                 NavigationService?.Navigate(new StudentHomePage());
             else
-                NavigationService?.Navigate(new SearchPage());
+                NavigationService?.Navigate(new TeacherHomePage());
         }
     }
 }

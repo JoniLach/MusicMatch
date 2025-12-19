@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:MusicMatch"
       mc:Ignorable="d" 
-      d:DesignHeight="700" d:DesignWidth="1000"
+      d:DesignHeight="1500" d:DesignWidth="1000"
       Title="Settings"
       Background="#121212">
 
@@ -74,6 +74,51 @@
 
                         <TextBlock Text="Username" Foreground="#B3B3B3" Margin="0,25,0,10"/>
                         <TextBox x:Name="txtUsername" IsReadOnly="True" Opacity="0.6" ToolTip="Username cannot be changed"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Profile Picture Section -->
+                <Border Background="#1E1E1E" CornerRadius="12" Padding="40" Margin="0,0,0,25">
+                    <StackPanel>
+                        <TextBlock Text="Profile Picture" FontSize="20" FontWeight="SemiBold" Foreground="White" Margin="0,0,0,30"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Profile Picture Preview -->
+                            <Border Width="100" Height="100" CornerRadius="50" Background="#333333">
+                                <Grid>
+                                    <TextBlock x:Name="txtProfileInitial" Text="U" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#1DB954"/>
+                                    <Ellipse x:Name="imgProfilePreview" Visibility="Collapsed">
+                                        <Ellipse.Fill>
+                                            <ImageBrush x:Name="imgProfileBrush" Stretch="UniformToFill"/>
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                </Grid>
+                            </Border>
+
+                            <!-- Upload Controls -->
+                            <StackPanel Grid.Column="2" VerticalAlignment="Center">
+                                <Button x:Name="btnBrowseProfilePic" Click="btnBrowseProfilePic_Click" Content="Choose Picture" Background="#1DB954" Foreground="White" FontWeight="Bold" Height="40" Margin="0,10,0,0" HorizontalAlignment="Left" Width="150">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="border" CornerRadius="20" Background="{TemplateBinding Background}" Padding="20,0">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="border" Property="Background" Value="#1ED760"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </StackPanel>
+                        </Grid>
                     </StackPanel>
                 </Border>
 

@@ -23,9 +23,24 @@ namespace MusicMatch
     /// </summary>
     public partial class Signup : Page
     {
+        private string selectedProfilePicturePath = null;
+
         public Signup()
         {
             InitializeComponent();
+        }
+
+        private void btnBrowseProfilePic_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+            dlg.Title = "Select Profile Picture";
+
+            if (dlg.ShowDialog() == true)
+            {
+                selectedProfilePicturePath = dlg.FileName;
+                txtProfilePicture.Text = "Profile picture selected";
+            }
         }
         private void btnSignUp_Click(object sender, RoutedEventArgs e)
         {
@@ -54,7 +69,11 @@ namespace MusicMatch
                     Email = email,
                     FirstName = firstName,
                     LastName = lastName,
-                    City = city
+                    City = city,
+                    ProfilePicture = selectedProfilePicturePath,
+                    Price = 0,
+                    Rating = 0,
+                    AmountOfJobs = 0
                 };
 
                 try
@@ -79,7 +98,8 @@ namespace MusicMatch
                     Email = email,
                     FirstName = firstName,
                     LastName = lastName,
-                    City = city
+                    City = city,
+                    ProfilePicture = selectedProfilePicturePath
                 };
 
                 try 

@@ -50,6 +50,18 @@
                             <TextBlock Text="City" Foreground="LightGray"/>
                             <TextBox x:Name="txtCity" Margin="0,0,0,10" Foreground="White" />
 
+                            <TextBlock Text="Profile Picture (Optional)" Foreground="LightGray"/>
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="10"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock x:Name="txtProfilePicture" Foreground="White" Text="No file selected" Margin="0,10,0,0"/>
+                                <Button x:Name="btnBrowseProfilePic" Grid.Column="2" Content="Browse..." Click="btnBrowseProfilePic_Click" 
+                                        Background="#1DB954" Foreground="White" Padding="10,5" Cursor="Hand"/>
+                            </Grid>
+
                             <CheckBox x:Name="chkIsTeacher" Content="Sign up as a teacher" Margin="0,0,0,10" Foreground="LightGray"/>
 
 
@@ -58,14 +70,14 @@
                             Click="btnSignUp_Click"
                             Content="SIGN UP"
                             Cursor="Hand"
-                            FontSize="12"
+                            Margin="0,10,0,0"
                             Foreground="White">
                                 <Button.Style>
                                     <Style TargetType="Button">
-                                        <Setter Property="Background" Value="#FF580758" />
+                                        <Setter Property="Background" Value="#1DB954" />
                                         <Style.Triggers>
                                             <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#FFA038A0" />
+                                                <Setter Property="Background" Value="#1ED760" />
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>

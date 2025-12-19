@@ -46,7 +46,7 @@
             <TextBlock Text="☰  Menu"
                        FontSize="16" FontWeight="Bold"
                        Foreground="White" Margin="12" />
-            <Button Content="&#x1F50D;  Search" Click="Search_Click"
+            <Button x:Name="btnSearchHome" Content="&#x1F50D;  Search" Click="Search_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5" />
             <Button Content="&#x2699;  Settings" Click="Settings_Click"
                     Style="{StaticResource MenuButtonStyle}" Foreground="White" Margin="5" />
