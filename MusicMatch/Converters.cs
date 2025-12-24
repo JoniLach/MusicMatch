@@ -26,9 +26,9 @@ namespace MusicMatch
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is bool isBooked)
+            if (value is bool isBooked&&isBooked)
             {
-                return isBooked ? "BOOKED" : "AVAILABLE";
+                return "BOOKED";
             }
             return "AVAILABLE";
         }
