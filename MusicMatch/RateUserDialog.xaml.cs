@@ -12,15 +12,39 @@ namespace MusicMatch
         {
             InitializeComponent();
             txtPrompt.Text = $"How was your experience with {userName}?";
+            UpdateStars();
         }
 
         private void Rating_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is RadioButton rb && rb.Tag != null)
+            if (sender is Button btn && btn.Tag != null)
             {
-                if (int.TryParse(rb.Tag.ToString(), out int rating))
+                if (int.TryParse(btn.Tag.ToString(), out int rating))
                 {
                     SelectedRating = rating;
+                    UpdateStars();
+                }
+            }
+        }
+
+        private void UpdateStars()
+        {
+            if (StarsPanel == null) return;
+
+            foreach (var child in StarsPanel.Children)
+            {
+                if (child is Button btn && int.TryParse(btn.Tag.ToString(), out int starValue))
+                {
+                    if (starValue <= SelectedRating)
+                    {
+                        btn.Content = "⭐"; // Filled star
+                        btn.Opacity = 1.0;
+                    }
+                    else
+                    {
+                        btn.Content = "☆"; // Empty star
+                        btn.Opacity = 0.5;
+                    }
                 }
             }
         }
