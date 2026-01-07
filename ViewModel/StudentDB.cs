@@ -48,8 +48,8 @@ namespace ViewModel
             Student student = entity as Student;
 
             base.CreateModel(student);
-            student.Rating = (int)this.reader["Rating"];
-            student.InstId = (int)this.reader["InstId"];
+            student.Rating = Convert.ToDouble(this.reader["StudentRating"]);
+            student.SessionsCompleted = (int)this.reader["SessionsCompleted"];
         }
 
         public override void Insert(BaseEntity entity)
@@ -72,7 +72,7 @@ namespace ViewModel
         {
             this.command.CommandText = $@"SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email, 
                                                 tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
-                                                tblStudent.StudentRating, tblStudent.InstId
+                                                tblStudent.StudentRating, tblStudent.SessionsCompleted
                                          FROM   (tblStudent INNER JOIN
                                                        tblUsers ON tblStudent.id = tblUsers.id)";
 
@@ -84,7 +84,7 @@ namespace ViewModel
             this.command.CommandText = $@"
         SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
                 tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
-                tblStudent.StudentRating
+                tblStudent.StudentRating, tblStudent.SessionsCompleted
         FROM    tblStudent 
         INNER JOIN tblUsers ON tblStudent.id = tblUsers.id
         WHERE tblUsers.Username = '{username}' AND tblUsers.[Password] = '{password}'";
@@ -106,9 +106,9 @@ namespace ViewModel
                 Student student = list[0] as Student;
                 if (student != null)
                 {
-                    int currentRating = student.Rating;
+                    double currentRating = student.Rating;
                     
-                    int finalRating = currentRating == 0 ? newRating : (currentRating + newRating) / 2;
+                    double finalRating = currentRating == 0 ? newRating : (currentRating + newRating) / 2;
                     
                     this.command.CommandText = $"UPDATE tblStudent SET StudentRating = {finalRating} WHERE id = {studentId}";
                     this.command.ExecuteNonQuery();
