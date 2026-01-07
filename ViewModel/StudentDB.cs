@@ -48,24 +48,10 @@ namespace ViewModel
             Student student = entity as Student;
 
             base.CreateModel(student);
-
-            // Helper to check if the reader has a given column
-            Func<string, bool> hasColumn = name =>
-            {
-                for (int i = 0; i < this.reader.FieldCount; i++)
-                    if (string.Equals(this.reader.GetName(i), name, StringComparison.OrdinalIgnoreCase))
-                        return true;
-                return false;
-            };
-
-            // Map StudentRating (database column) to Student.Rating
-            if (hasColumn("StudentRating") && this.reader["StudentRating"] != DBNull.Value)
-                student.Rating = Convert.ToInt32(this.reader["StudentRating"]);
-
-            // Map InstId if present
-            if (hasColumn("InstId") && this.reader["InstId"] != DBNull.Value)
-                student.InstId = Convert.ToInt32(this.reader["InstId"]);
+            student.Rating = (int)this.reader["Rating"];
+            student.InstId = (int)this.reader["InstId"];
         }
+
         public override void Insert(BaseEntity entity)
         {
             Student student = entity as Student;

@@ -41,52 +41,16 @@ namespace ViewModel
             updated = new List<ChangeEntity>();
         }
 
-        //public List<BaseEntity> Select()
-        //{
-        //    List<BaseEntity> list = new List<BaseEntity>();
-
-        //    try
-        //    {
-        //        this.command.Connection = connection;
-        //        this.connection.Open();
-
-        //        this.reader = command.ExecuteReader();
-
-        //        BaseEntity entity;
-
-        //        while (this.reader.Read())
-        //        {
-        //            entity = NewEntity();
-
-        //            this.CreateModel(entity);
-
-        //            list.Add(entity);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        System.Diagnostics.Debug.WriteLine(ex.Message + "\nSQL: " + command.CommandText);
-        //    }
-        //    finally
-        //    {
-        //        if (this.reader != null)
-        //            this.reader.Close();
-
-        //        if (this.connection.State == ConnectionState.Open)
-        //            this.connection.Close();
-        //    }
-
-        //    return list;
-
-        //}
         public List<BaseEntity> Select()
         {
+            //this.command.CommandText = "SELECT *, tblPeople.id AS ID FROM (tblPeople INNER JOIN tblStudent ON tblPeople.id = tblStudent.id)";
             List<BaseEntity> list = new List<BaseEntity>();
 
             try
-            {   
+            {
                 this.command.Connection = connection;
                 this.connection.Open();
+
                 this.reader = command.ExecuteReader();
 
                 BaseEntity entity;
@@ -94,46 +58,27 @@ namespace ViewModel
                 while (this.reader.Read())
                 {
                     entity = NewEntity();
+
                     this.CreateModel(entity);
+
                     list.Add(entity);
                 }
-
-                System.Diagnostics.Debug.WriteLine($"Number of Records Retrieved: {list.Count}");
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine($"Exception: {ex.Message}");
-                System.Diagnostics.Debug.WriteLine($"Stack Trace: {ex.StackTrace}");
-                System.Diagnostics.Debug.WriteLine($"SQL: {command.CommandText}");
+                System.Diagnostics.Debug.WriteLine(ex.Message + "\nSQL: " + command.CommandText);
             }
             finally
             {
                 if (this.reader != null)
-                {
-                    try
-                    {
-                        this.reader.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Exception Closing Reader: {ex.Message}");
-                    }
-                }
+                    this.reader.Close();
 
                 if (this.connection.State == ConnectionState.Open)
-                {
-                    try
-                    {
-                        this.connection.Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Diagnostics.Debug.WriteLine($"Exception Closing Connection: {ex.Message}");
-                    }
-                }
+                    this.connection.Close();
             }
 
             return list;
+
         }
 
 
