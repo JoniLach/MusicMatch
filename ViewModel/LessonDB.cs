@@ -30,14 +30,19 @@ namespace ViewModel
             lesson.LessonDate = (DateTime)this.reader["LessonDate"];
             lesson.StartTime = this.reader["StartTime"].ToString();
             lesson.Duration = (int)this.reader["Duration"];
+            //Fix
+            if (this.reader["StudentRating"] != DBNull.Value)
+                lesson.StudentRating = (double)this.reader["Duration"];
+            if (this.reader["TeacherRating"] != DBNull.Value)
+                lesson.TeacherRating = (double)this.reader["Duration"];
         }
 
         public override string CreateInsertSQL(BaseEntity entity)
         {
             Lesson lesson = entity as Lesson;
-            // Access uses # for dates
+            // Access uses # for dates change to date/time
             string dateStr = lesson.LessonDate.ToString("yyyy-MM-dd");
-            string sqlStr = $"INSERT INTO tblLessons (TeacherId, LessonDate, StartTime, Duration) VALUES ({lesson.TeacherId}, '{dateStr}', '{lesson.StartTime}', {lesson.Duration})";
+            string sqlStr = $"INSERT INTO tblLessons (TeacherId, LessonDate, StartTime, Duration, StudentRating, TeacherRating) VALUES ({lesson.TeacherId}, '{dateStr}', '{lesson.StartTime}', {lesson.Duration}, {lesson.StudentRating}, {lesson.TeacherRating})";
             return sqlStr;
         }
 
@@ -47,7 +52,7 @@ namespace ViewModel
             string dateStr = lesson.LessonDate.ToString("yyyy-MM-dd");
             string studentVal = lesson.StudentId == 0 ? "NULL" : lesson.StudentId.ToString();
             
-            string sqlStr = $"UPDATE tblLessons SET TeacherId={lesson.TeacherId}, StudentId={studentVal}, LessonDate='{dateStr}', StartTime='{lesson.StartTime}', Duration={lesson.Duration} WHERE id={lesson.Id}";
+            string sqlStr = $"UPDATE tblLessons SET TeacherId={lesson.TeacherId}, StudentId={studentVal}, LessonDate='{dateStr}', StartTime='{lesson.StartTime}', Duration={lesson.Duration}, StudentRating={lesson.StudentRating}, TeacherRating={lesson.TeacherRating} WHERE id={lesson.Id}";
             return sqlStr;
         }
 
