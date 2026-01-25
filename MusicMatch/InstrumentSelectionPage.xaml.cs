@@ -17,15 +17,29 @@ using ViewModel;
 
 namespace MusicMatch
 {
+    public class SelectableInstrument
+    {
+        public Instrument Instrument { get; set; }
+        public bool IsSelected { get; set; }
+    }
+
     public partial class InstrumentSelectionPage : Page
     {
         private User currentUser;
-        private List<Instrument> selectedInstruments = new List<Instrument>();
+        private bool isEditMode;
+        private List<SelectableInstrument> instrumentsList = new List<SelectableInstrument>();
 
-        public InstrumentSelectionPage(User user)
+        public InstrumentSelectionPage(User user, bool isEditMode = false)
         {
             InitializeComponent();
             currentUser = user;
+            this.isEditMode = isEditMode;
+            
+            if (isEditMode)
+            {
+                btnContinue.Content = "Save";
+            }
+            
             LoadInstruments();
         }
 
@@ -34,45 +48,26 @@ namespace MusicMatch
             try
             {
                 InstrumentDB db = new InstrumentDB();
-                InstrumentList instruments = db.SelectAll();
-                icInstruments.ItemsSource = instruments;
-                
-                // If the list is empty, add some mock data if DB is empty so UI isn't blank (optional fallback)
-                if (instruments.Count == 0)
+                InstrumentList allInstruments = db.SelectAll();
+
+                // Get user's existing instruments to pre-select
+                InstrumentList userInstruments = db.GetUserInstruments(currentUser.Id);
+
+                instrumentsList.Clear();
+                foreach (Instrument inst in allInstruments)
                 {
-                    // For now, let's assume DB has data. If not, the user sees nothing.
-                    // We could hardcode insert if we wanted to seed the DB.
-                    // db.InsertHardcodedInstruments(); // hypothetical method
+                    instrumentsList.Add(new SelectableInstrument
+                    {
+                        Instrument = inst,
+                        IsSelected = userInstruments.Any(ui => ui.Id == inst.Id)
+                    });
                 }
+
+                icInstruments.ItemsSource = instrumentsList;
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Failed to load instruments: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private void CheckBox_AttachedToVisualTree(object sender, EventArgs e)
-        {
-            // Optional: can use this to state management if needed
-        }
-
-        private void CheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            var checkBox = sender as CheckBox;
-            var instrument = checkBox.DataContext as Instrument;
-            if (instrument != null && !selectedInstruments.Contains(instrument))
-            {
-                selectedInstruments.Add(instrument);
-            }
-        }
-
-        private void CheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            var checkBox = sender as CheckBox;
-            var instrument = checkBox.DataContext as Instrument;
-            if (instrument != null && selectedInstruments.Contains(instrument))
-            {
-                selectedInstruments.Remove(instrument);
             }
         }
 
@@ -88,18 +83,70 @@ namespace MusicMatch
             try
             {
                 InstrumentDB db = new InstrumentDB();
-                foreach (var inst in selectedInstruments)
-                {
-                    db.AddUserInstrument(currentUser.Id, inst.Id);
-                }
-
-                // Navigate to next page (SearchPage or StudentHomePage depending on type)
-                MainWindow.LoggedInUser = currentUser; // Ensure global static is set
                 
-                if (currentUser is Student)
-                    NavigationService?.Navigate(new StudentHomePage());
+                // Get current validated selections
+                var selectedInstruments = instrumentsList.Where(i => i.IsSelected).Select(i => i.Instrument).ToList();
+
+                if (isEditMode)
+                {
+                    // In edit mode, we need to sync additions and removals
+                    InstrumentList currentDbInstruments = db.GetUserInstruments(currentUser.Id);
+
+                    // Add new ones
+                    foreach (var inst in selectedInstruments)
+                    {
+                        if (!currentDbInstruments.Any(ci => ci.Id == inst.Id))
+                        {
+                            db.AddUserInstrument(currentUser.Id, inst.Id);
+                        }
+                    }
+
+                    // Remove deselected ones
+                    foreach (var inst in currentDbInstruments)
+                    {
+                        if (!selectedInstruments.Any(si => si.Id == inst.Id))
+                        {
+                            db.RemoveUserInstrument(currentUser.Id, inst.Id);
+                        }
+                    }
+                    
+                    // Go back
+                    if (NavigationService.CanGoBack)
+                    {
+                        NavigationService.GoBack();
+                    }
+                    else
+                    {
+                        // Fallback if no history
+                        if (currentUser is Student)
+                            NavigationService?.Navigate(new StudentHomePage());
+                        else
+                            NavigationService?.Navigate(new TeacherHomePage());
+                    }
+                }
                 else
-                    NavigationService?.Navigate(new TeacherHomePage());
+                {
+                    // Onboarding mode: Just add everything selected (assuming fresh start or cumulative add)
+                    // Just to be safe, we can use the same logic as sync, or just add.
+                    // The original code just added. Let's stick to safe adding.
+                     InstrumentList currentDbInstruments = db.GetUserInstruments(currentUser.Id);
+                     
+                     foreach (var inst in selectedInstruments)
+                     {
+                        if (!currentDbInstruments.Any(ci => ci.Id == inst.Id))
+                        {
+                            db.AddUserInstrument(currentUser.Id, inst.Id);
+                        }
+                     }
+                     
+                    // Navigate to next page
+                    MainWindow.LoggedInUser = currentUser;
+                    
+                    if (currentUser is Student)
+                        NavigationService?.Navigate(new StudentHomePage());
+                    else
+                        NavigationService?.Navigate(new TeacherHomePage());
+                }
             }
             catch (Exception ex)
             {

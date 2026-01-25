@@ -25,7 +25,7 @@ namespace MusicMatch
         {
             InitializeComponent();
             currentTeacher = MainWindow.LoggedInUser as Teacher;
-            LoadTeacherData();
+            this.Loaded += (s, e) => LoadTeacherData();
         }
 
         private void LoadTeacherData()
@@ -233,11 +233,7 @@ namespace MusicMatch
 
         private void btnManageInstruments_Click(object sender, RoutedEventArgs e)
         {
-            var dialog = new InstrumentSelectionDialog(currentTeacher);
-            if (dialog.ShowDialog() == true)
-            {
-                LoadInstruments(); // Refresh the list
-            }
+            NavigationService?.Navigate(new InstrumentSelectionPage(currentTeacher, true));
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)
