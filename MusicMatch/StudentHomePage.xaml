@@ -59,6 +59,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <local:PathToImageConverter x:Key="PathToImageConverter" />
     </Page.Resources>
 
     <Grid Background="{StaticResource BackgroundBrush}">
@@ -233,12 +235,37 @@
                                 <ColumnDefinition Width="Auto" /> <!-- Price/Rating -->
                             </Grid.ColumnDefinitions>
 
-                            <!-- Graphic Placeholder -->
+                            <!-- Avatar Section -->
                             <Border Width="60" Height="60" CornerRadius="30" Background="#333333"
                                 Margin="0,0,15,0">
-                                <TextBlock Text="{Binding FirstName, StringFormat={}{0:1}}"
-                                    HorizontalAlignment="Center" VerticalAlignment="Center"
-                                    FontSize="24" FontWeight="Bold" Foreground="#1DB954" />
+                                <Grid>
+                                    <!-- Fallback Initials -->
+                                    <TextBlock Text="{Binding FirstName, StringFormat={}{0:1}}"
+                                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                                        FontSize="24" FontWeight="Bold" Foreground="#1DB954" />
+
+                                    <!-- Profile Picture -->
+                                    <Ellipse x:Name="imgProfile" Width="60" Height="60">
+                                        <Ellipse.Fill>
+                                            <ImageBrush
+                                                ImageSource="{Binding ProfilePicture, Converter={StaticResource PathToImageConverter}}"
+                                                Stretch="UniformToFill" />
+                                        </Ellipse.Fill>
+                                        <Ellipse.Style>
+                                            <Style TargetType="Ellipse">
+                                                <Setter Property="Visibility" Value="Visible" />
+                                                <Style.Triggers>
+                                                    <DataTrigger
+                                                        Binding="{Binding ProfilePicture, Converter={StaticResource PathToImageConverter}}"
+                                                        Value="{x:Null}">
+                                                        <Setter Property="Visibility"
+                                                            Value="Collapsed" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Ellipse.Style>
+                                    </Ellipse>
+                                </Grid>
                             </Border>
 
                             <StackPanel Grid.Column="1" VerticalAlignment="Center">

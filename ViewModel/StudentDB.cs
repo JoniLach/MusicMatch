@@ -71,7 +71,7 @@ namespace ViewModel
         public StudentList SelectAll()
         {
             this.command.CommandText = $@"SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email, 
-                                                tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
+                                                tblUsers.FirstName, tblUsers.LastName, tblUsers.City, tblUsers.ProfilePicture,
                                                 tblStudent.StudentRating, tblStudent.SessionsCompleted
                                          FROM   (tblStudent INNER JOIN
                                                        tblUsers ON tblStudent.id = tblUsers.id)";
@@ -83,7 +83,7 @@ namespace ViewModel
         {
             this.command.CommandText = $@"
         SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
-                tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
+                tblUsers.FirstName, tblUsers.LastName, tblUsers.City, tblUsers.ProfilePicture,
                 tblStudent.StudentRating, tblStudent.SessionsCompleted
         FROM    tblStudent 
         INNER JOIN tblUsers ON tblStudent.id = tblUsers.id

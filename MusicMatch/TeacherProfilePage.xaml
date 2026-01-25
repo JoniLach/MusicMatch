@@ -50,6 +50,33 @@
                                     <ImageBrush x:Name="imgProfileBrush" Stretch="UniformToFill" />
                                 </Ellipse.Fill>
                             </Ellipse>
+
+                            <!-- Change Button (Overlay) -->
+                            <Button x:Name="btnChangePic" Click="btnChangePic_Click"
+                                Visibility="Collapsed"
+                                Width="120" Height="120" Background="#80000000" BorderThickness="0"
+                                Cursor="Hand" ToolTip="Change Profile Picture">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border CornerRadius="60"
+                                            Background="{TemplateBinding Background}">
+                                            <TextBlock Text="📷" FontSize="24"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center" Foreground="White"
+                                                Opacity="0.8" />
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Opacity" Value="1" />
+                                                <Setter Property="Background" Value="#A0000000" />
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="False">
+                                                <Setter Property="Opacity" Value="0" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
                         </Grid>
                     </Border>
 

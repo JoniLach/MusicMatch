@@ -77,7 +77,7 @@ namespace ViewModel
             // Corrected SQL query with the missing FROM clause
             this.command.CommandText = $@"
         SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
-                tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
+                tblUsers.FirstName, tblUsers.LastName, tblUsers.City, tblUsers.ProfilePicture,
                 tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs, tblTeacher.Description
         FROM    tblTeacher 
         INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id
@@ -96,7 +96,7 @@ namespace ViewModel
         {
             this.command.CommandText = @"
                 SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
-                        tblUsers.FirstName, tblUsers.LastName, tblUsers.City,
+                        tblUsers.FirstName, tblUsers.LastName, tblUsers.City, tblUsers.ProfilePicture,
                         tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs, tblTeacher.Description
                 FROM    tblTeacher 
                 INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id";

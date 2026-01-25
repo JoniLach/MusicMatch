@@ -60,6 +60,9 @@ namespace MusicMatch
                 return;
             }
 
+            // Save image locally if selected
+            string savedImagePath = ImageHelper.SaveImageLocally(selectedProfilePicturePath);
+
             if (isTeacher)
             {
                 var teacher = new Teacher
@@ -70,11 +73,12 @@ namespace MusicMatch
                     FirstName = firstName,
                     LastName = lastName,
                     City = city,
-                    ProfilePicture = selectedProfilePicturePath,
+                    ProfilePicture = savedImagePath,
                     Price = 0,
                     Rating = 0,
                     AmountOfJobs = 0
                 };
+
 
                 try
                 {
@@ -99,7 +103,7 @@ namespace MusicMatch
                     FirstName = firstName,
                     LastName = lastName,
                     City = city,
-                    ProfilePicture = selectedProfilePicturePath
+                    ProfilePicture = savedImagePath
                 };
 
                 try 

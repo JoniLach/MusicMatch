@@ -32,11 +32,13 @@ namespace MusicMatch
             if (MainWindow.LoggedInUser is Teacher loggedTeacher && loggedTeacher.Id == teacher.Id)
             {
                 isOwnProfile = true;
+                btnChangePic.Visibility = Visibility.Visible;
             }
             else
             {
                 // Hide edit button if not own profile
                 btnEditDescription.Visibility = Visibility.Collapsed;
+                btnChangePic.Visibility = Visibility.Collapsed;
             }
             
             LoadTeacherProfile();
@@ -186,6 +188,37 @@ namespace MusicMatch
         private void btnBookLesson_Click(object sender, RoutedEventArgs e)
         {
             NavigationService?.Navigate(new BookLessonPage(teacher.Id));
+        }
+
+        private void btnChangePic_Click(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "Image files (*.jpg, *.jpeg, *.png)|*.jpg;*.jpeg;*.png";
+            dlg.Title = "Select New Profile Picture";
+
+            if (dlg.ShowDialog() == true)
+            {
+                string savedPath = ImageHelper.SaveImageLocally(dlg.FileName);
+                if (savedPath != null)
+                {
+                    try
+                    {
+                        teacher.ProfilePicture = savedPath;
+                        
+                        TeacherDB db = new TeacherDB();
+                        db.Update(teacher);
+                        db.SaveChanges(); // Persist to DB using new UserDB logic
+
+                        LoadTeacherProfile(); // Refresh UI
+
+                        MessageBox.Show("Profile picture updated!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Failed to update picture: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+            }
         }
     }
 }
