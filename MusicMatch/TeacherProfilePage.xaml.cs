@@ -22,6 +22,7 @@ namespace MusicMatch
         private Teacher teacher;
         private bool isEditMode = false;
         private bool isOwnProfile = false;
+        private string path;
 
         public TeacherProfilePage(Teacher selectedTeacher)
         {
@@ -55,6 +56,7 @@ namespace MusicMatch
                 txtRating.Text = teacher.Rating.ToString("0.0");
                 txtPrice.Text = $"{teacher.Price} ILS/hr";
                 txtJobs.Text = $"{teacher.AmountOfJobs} jobs completed";
+                path = ImageHelper.GetImagePath(teacher.ProfilePicture);
 
                 // Initial for avatar
                 if (!string.IsNullOrEmpty(teacher.FirstName))
@@ -63,7 +65,7 @@ namespace MusicMatch
                 }
                 else
                 {
-                    txtInitial.Text = "T";
+                    txtInitial.Text = "U";
                 }
 
                 // Description
@@ -79,13 +81,13 @@ namespace MusicMatch
                 }
 
                 // Profile Picture (if available)
-                if (!string.IsNullOrEmpty(teacher.ProfilePicture) && System.IO.File.Exists(teacher.ProfilePicture))
+                if (!string.IsNullOrEmpty(teacher.ProfilePicture))
                 {
                     try
                     {
                         BitmapImage bitmap = new BitmapImage();
                         bitmap.BeginInit();
-                        bitmap.UriSource = new Uri(teacher.ProfilePicture, UriKind.RelativeOrAbsolute);
+                        bitmap.UriSource = new Uri(path);
                         bitmap.CacheOption = BitmapCacheOption.OnLoad;
                         bitmap.EndInit();
                         imgProfileBrush.ImageSource = bitmap;

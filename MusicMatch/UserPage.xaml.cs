@@ -50,12 +50,12 @@ namespace MusicMatch
                     txtProfileInitial.Text = "U";
                 }
                 
-                if (!string.IsNullOrEmpty(currentUser.ProfilePicture) && System.IO.File.Exists(currentUser.ProfilePicture))
+                if (!string.IsNullOrEmpty(currentUser.ProfilePicture))
                 {
 
                     BitmapImage bitmap = new BitmapImage();
                     bitmap.BeginInit();
-                    bitmap.UriSource = new Uri(currentUser.ProfilePicture, UriKind.RelativeOrAbsolute);
+                    bitmap.UriSource = new Uri(ImageHelper.GetImagePath(currentUser.ProfilePicture));
                     bitmap.CacheOption = BitmapCacheOption.OnLoad;
                     bitmap.EndInit();
                     imgProfileBrush.ImageSource = bitmap;
@@ -124,7 +124,16 @@ namespace MusicMatch
             // Update profile picture if changed
             if (!string.IsNullOrEmpty(selectedProfilePicturePath))
             {
-                currentUser.ProfilePicture = selectedProfilePicturePath;
+                string savedImagePath = ImageHelper.SaveImageLocally(selectedProfilePicturePath);
+                if (!string.IsNullOrEmpty(savedImagePath))
+                {
+                    currentUser.ProfilePicture = savedImagePath; // Save relative path
+                }
+                else
+                {
+                    MessageBox.Show("Failed to save profile picture.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
             }
 
             if (!string.IsNullOrEmpty(txtPassword.Password))

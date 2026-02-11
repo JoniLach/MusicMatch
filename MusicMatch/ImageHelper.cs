@@ -5,6 +5,15 @@ namespace MusicMatch
 {
     public static class ImageHelper
     {
+        public static string GetImagePath(string relativePath)
+        {
+            string appBase = AppDomain.CurrentDomain.BaseDirectory;
+            string projectDirectory = Path.GetFullPath(Path.Combine(appBase, @"..\..\.."));
+
+            // Define the relative path for the Images folder
+            string imagePath = Path.Combine(projectDirectory, "MusicMatch", relativePath);
+            return imagePath;
+        }
         public static string SaveImageLocally(string sourcePath)
         {
             try
@@ -12,8 +21,12 @@ namespace MusicMatch
                 if (string.IsNullOrEmpty(sourcePath) || !File.Exists(sourcePath))
                     return null;
 
+                // Get the project directory by navigating up from the bin folder
                 string appBase = AppDomain.CurrentDomain.BaseDirectory;
-                string imagesFolder = Path.Combine(appBase, "Images");
+                string projectDirectory = Path.GetFullPath(Path.Combine(appBase, @"..\..\.."));
+
+                // Define the relative path for the Images folder
+                string imagesFolder = Path.Combine(projectDirectory, "MusicMatch", "Images");
 
                 if (!Directory.Exists(imagesFolder))
                 {
@@ -26,12 +39,8 @@ namespace MusicMatch
 
                 File.Copy(sourcePath, destinationPath, true);
 
-                // Return relative path or absolute? 
-                // Using absolute for simplicity in WPF binding, but storing relative is better if app moves.
-                // Let's return absolute path for now as it's easier for WPF ImageSource to resolve without converters
-                // BUT User object should probably store something portable. 
-                // Let's store the full path for now as it matches current usage in TeacherProfilePage (which checks File.Exists)
-                return destinationPath;
+                // Return the relative path for database storage
+                return Path.Combine("Images", newFileName);
             }
             catch (Exception ex)
             {
