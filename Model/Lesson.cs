@@ -13,16 +13,16 @@ namespace Model
         private DateTime lessonDate;
         private string startTime;
         private int duration; // in minutes
-        private double studentRating; 
-        private double teacherRating; 
+        private int studentRating; 
+        private int teacherRating; 
 
         public int TeacherId { get => teacherId; set => teacherId = value; }
         public int StudentId { get => studentId; set => studentId = value; }
         public DateTime LessonDate { get => lessonDate; set => lessonDate = value; }
         public string StartTime { get => startTime; set => startTime = value; }
         public int Duration { get => duration; set => duration = value; }
-        public double StudentRating { get => studentRating; set => studentRating = value; }
-        public double TeacherRating { get => teacherRating; set => teacherRating = value; }
+        public int StudentRating { get => studentRating; set => studentRating = value; }
+        public int TeacherRating { get => teacherRating; set => teacherRating = value; }
 
         // Non-mapped properties for display
         public string TeacherName { get; set; }

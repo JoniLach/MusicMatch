@@ -32,9 +32,9 @@ namespace ViewModel
             lesson.Duration = (int)this.reader["Duration"];
             //Fix
             if (this.reader["StudentRating"] != DBNull.Value)
-                lesson.StudentRating = (double)this.reader["Duration"];
+                lesson.StudentRating = (int)this.reader["StudentRating"];
             if (this.reader["TeacherRating"] != DBNull.Value)
-                lesson.TeacherRating = (double)this.reader["Duration"];
+                lesson.TeacherRating = (int)this.reader["TeacherRating"];
         }
 
         public override string CreateInsertSQL(BaseEntity entity)
@@ -42,7 +42,7 @@ namespace ViewModel
             Lesson lesson = entity as Lesson;
             // Access uses # for dates change to date/time
             string dateStr = lesson.LessonDate.ToString("yyyy-MM-dd");
-            string sqlStr = $"INSERT INTO tblLessons (TeacherId, LessonDate, StartTime, Duration, StudentRating, TeacherRating) VALUES ({lesson.TeacherId}, '{dateStr}', '{lesson.StartTime}', {lesson.Duration}, {lesson.StudentRating}, {lesson.TeacherRating})";
+            string sqlStr = $"INSERT INTO tblLessons (TeacherId, StudentId, LessonDate, StartTime, Duration, TeacherRating, StudentRating) VALUES ({lesson.TeacherId}, {lesson.StudentId}, '{dateStr}', '{lesson.StartTime}', {lesson.Duration}, {lesson.TeacherRating}, {lesson.StudentRating})";
             return sqlStr;
         }
 
@@ -83,29 +83,27 @@ namespace ViewModel
 
         public LessonList GetUpcomingLessons(int userId, bool isTeacher)
         {
-            // Get current date and time for filtering
-            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            // Access expects MM/dd/yyyy for date literals
+            string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
             string currentTime = DateTime.Now.ToString("HH:mm");
-            
+
             if (isTeacher)
             {
-                 // For teachers: get future lessons that are booked
-                 this.command.CommandText = $@"
+                this.command.CommandText = $@"
                     SELECT tblLessons.*, 
                            TeacherUser.FirstName AS TeacherName, 
                            StudentUser.FirstName AS StudentName
                     FROM ((tblLessons 
                     LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
                     LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
-                    WHERE tblLessons.TeacherId = {userId} 
-                      AND (tblLessons.StudentId IS NOT NULL AND tblLessons.StudentId <> 0) 
-                      AND ((tblLessons.LessonDate > #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
-                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
+                    WHERE tblLessons.TeacherId = 6 
+                      AND tblLessons.LessonDate > #02/22/2026#
+                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime
+";
             }
             else
             {
-                 // For students: get their booked future lessons
-                 this.command.CommandText = $@"
+                this.command.CommandText = $@"
                     SELECT tblLessons.*, 
                            TeacherUser.FirstName AS TeacherName, 
                            StudentUser.FirstName AS StudentName
@@ -113,7 +111,13 @@ namespace ViewModel
                     LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
                     LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
                     WHERE tblLessons.StudentId = {userId} 
-                      AND ((tblLessons.LessonDate > #{currentDate}#) OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
+                      AND (
+                            tblLessons.LessonDate > #{currentDate}#
+                            OR (
+                                tblLessons.LessonDate = #{currentDate}#
+                                AND tblLessons.StartTime >= '{currentTime}'
+                            )
+                          )
                     ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
             }
             return new LessonList(base.Select());
