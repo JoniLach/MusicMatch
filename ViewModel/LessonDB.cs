@@ -89,6 +89,7 @@ namespace ViewModel
 
             if (isTeacher)
             {
+                // For teachers: get future lessons that are booked (StudentId not null and not 0)
                 this.command.CommandText = $@"
                     SELECT tblLessons.*, 
                            TeacherUser.FirstName AS TeacherName, 
@@ -96,13 +97,15 @@ namespace ViewModel
                     FROM ((tblLessons 
                     LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
                     LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
-                    WHERE tblLessons.TeacherId = 6 
-                      AND tblLessons.LessonDate > #02/22/2026#
-                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime
-";
+                    WHERE tblLessons.TeacherId = {userId} 
+                      AND (tblLessons.StudentId IS NOT NULL AND tblLessons.StudentId <> 0)
+                      AND ((tblLessons.LessonDate > #{currentDate}#) 
+                           OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
+                    ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
             }
             else
             {
+                // For students: get their booked future lessons
                 this.command.CommandText = $@"
                     SELECT tblLessons.*, 
                            TeacherUser.FirstName AS TeacherName, 
@@ -111,13 +114,8 @@ namespace ViewModel
                     LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
                     LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
                     WHERE tblLessons.StudentId = {userId} 
-                      AND (
-                            tblLessons.LessonDate > #{currentDate}#
-                            OR (
-                                tblLessons.LessonDate = #{currentDate}#
-                                AND tblLessons.StartTime >= '{currentTime}'
-                            )
-                          )
+                      AND ((tblLessons.LessonDate > #{currentDate}#) 
+                           OR (tblLessons.LessonDate = #{currentDate}# AND tblLessons.StartTime >= '{currentTime}')) 
                     ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
             }
             return new LessonList(base.Select());
