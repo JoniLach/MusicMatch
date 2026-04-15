@@ -51,7 +51,7 @@
                                 <TextBlock Text="{Binding Duration}" Foreground="#BBBBBB" FontSize="14"/>
                                 <TextBlock Text=" mins" Foreground="#BBBBBB" FontSize="14"/>
                             </StackPanel>
-                            <TextBlock x:Name="txtTeacher" Foreground="#1DB954" FontSize="12" Margin="0,5,0,0"/>
+                            <TextBlock x:Name="txtTeacher" Text="{Binding TeacherName, StringFormat='Teacher: {0}'}" Foreground="#1DB954" FontSize="12" Margin="0,5,0,0"/>
                         </StackPanel>
 
                         <Border Grid.Column="1" Background="#1DB954" CornerRadius="4" Padding="15,5" MinWidth="100">

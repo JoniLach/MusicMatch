@@ -98,21 +98,34 @@ namespace ViewModel
         }
         public void AddRating(int studentId, int newRating)
         {
-            // Get current rating info
-            this.command.CommandText = $"SELECT StudentRating FROM tblStudent WHERE id = {studentId}";
-            var list = base.Select();
-            if (list.Count > 0)
+            try
             {
-                Student student = list[0] as Student;
-                if (student != null)
+                this.connection.Open();
+
+                double currentRating = 0;
+                int sessions = 0;
+
+                this.command.CommandText = $"SELECT StudentRating, SessionsCompleted FROM tblStudent WHERE id = {studentId}";
+                using (var r = this.command.ExecuteReader())
                 {
-                    double currentRating = student.Rating;
-                    
-                    double finalRating = currentRating == 0 ? newRating : (currentRating + newRating) / 2;
-                    
-                    this.command.CommandText = $"UPDATE tblStudent SET StudentRating = {finalRating} WHERE id = {studentId}";
-                    this.command.ExecuteNonQuery();
+                    if (r.Read())
+                    {
+                        currentRating = Convert.ToDouble(r["StudentRating"]);
+                        sessions = (int)r["SessionsCompleted"];
+                    }
                 }
+
+                // Weighted average: same approach as TeacherDB
+                double finalRating = sessions == 0 ? newRating : ((currentRating * sessions) + newRating) / (sessions + 1);
+                int updatedSessions = sessions + 1;
+
+                this.command.CommandText = $"UPDATE tblStudent SET StudentRating = {finalRating.ToString(System.Globalization.CultureInfo.InvariantCulture)}, SessionsCompleted = {updatedSessions} WHERE id = {studentId}";
+                this.command.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (this.connection.State == System.Data.ConnectionState.Open)
+                    this.connection.Close();
             }
         }
     }

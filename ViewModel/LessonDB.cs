@@ -23,36 +23,43 @@ namespace ViewModel
             Lesson lesson = entity as Lesson;
             lesson.Id = (int)this.reader["id"];
             lesson.TeacherId = (int)this.reader["TeacherId"];
-            
+
             if(this.reader["StudentId"] != DBNull.Value)
                 lesson.StudentId = (int)this.reader["StudentId"];
 
             lesson.LessonDate = (DateTime)this.reader["LessonDate"];
             lesson.StartTime = this.reader["StartTime"].ToString();
             lesson.Duration = (int)this.reader["Duration"];
-            //Fix
+
             if (this.reader["StudentRating"] != DBNull.Value)
                 lesson.StudentRating = (int)this.reader["StudentRating"];
             if (this.reader["TeacherRating"] != DBNull.Value)
                 lesson.TeacherRating = (int)this.reader["TeacherRating"];
+
+            // Present in JOIN queries (GetUpcomingLessons, GetPastLessons, GetStudentBookedSessions)
+            try { lesson.TeacherName = this.reader["TeacherName"]?.ToString(); } catch (IndexOutOfRangeException) { }
+            try { lesson.StudentName = this.reader["StudentName"]?.ToString(); } catch (IndexOutOfRangeException) { }
         }
 
         public override string CreateInsertSQL(BaseEntity entity)
         {
             Lesson lesson = entity as Lesson;
-            // Access uses # for dates change to date/time
-            string dateStr = lesson.LessonDate.ToString("yyyy-MM-dd");
-            string sqlStr = $"INSERT INTO tblLessons (TeacherId, StudentId, LessonDate, StartTime, Duration, TeacherRating, StudentRating) VALUES ({lesson.TeacherId}, {lesson.StudentId}, '{dateStr}', '{lesson.StartTime}', {lesson.Duration}, {lesson.TeacherRating}, {lesson.StudentRating})";
+            string dateStr = lesson.LessonDate.ToString("MM/dd/yyyy");
+            string studentVal = lesson.StudentId == 0 ? "NULL" : lesson.StudentId.ToString();
+            string studentRating = lesson.StudentRating == 0 ? "NULL" : lesson.StudentRating.ToString();
+            string teacherRating = lesson.TeacherRating == 0 ? "NULL" : lesson.TeacherRating.ToString();
+            string sqlStr = $"INSERT INTO tblLessons (TeacherId, StudentId, LessonDate, StartTime, Duration, TeacherRating, StudentRating) VALUES ({lesson.TeacherId}, {studentVal}, #{dateStr}#, '{lesson.StartTime}', {lesson.Duration}, {teacherRating}, {studentRating})";
             return sqlStr;
         }
 
         public override string CreateUpdateSQL(BaseEntity entity)
         {
             Lesson lesson = entity as Lesson;
-            string dateStr = lesson.LessonDate.ToString("yyyy-MM-dd");
+            string dateStr = lesson.LessonDate.ToString("MM/dd/yyyy");
             string studentVal = lesson.StudentId == 0 ? "NULL" : lesson.StudentId.ToString();
-            
-            string sqlStr = $"UPDATE tblLessons SET TeacherId={lesson.TeacherId}, StudentId={studentVal}, LessonDate='{dateStr}', StartTime='{lesson.StartTime}', Duration={lesson.Duration}, StudentRating={lesson.StudentRating}, TeacherRating={lesson.TeacherRating} WHERE id={lesson.Id}";
+            string studentRating = lesson.StudentRating == 0 ? "NULL" : lesson.StudentRating.ToString();
+            string teacherRating = lesson.TeacherRating == 0 ? "NULL" : lesson.TeacherRating.ToString();
+            string sqlStr = $"UPDATE tblLessons SET TeacherId={lesson.TeacherId}, StudentId={studentVal}, LessonDate=#{dateStr}#, StartTime='{lesson.StartTime}', Duration={lesson.Duration}, StudentRating={studentRating}, TeacherRating={teacherRating} WHERE id={lesson.Id}";
             return sqlStr;
         }
 
@@ -123,7 +130,7 @@ namespace ViewModel
 
         public LessonList GetPastLessons(int userId, bool isTeacher)
         {
-            string currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string currentDate = DateTime.Now.ToString("MM/dd/yyyy");
             string currentTime = DateTime.Now.ToString("HH:mm");
             
             if (isTeacher)
@@ -158,14 +165,34 @@ namespace ViewModel
 
         public LessonList GetStudentBookedSessions(int studentId)
         {
-             this.command.CommandText = $"SELECT * FROM tblLessons WHERE StudentId = {studentId} ORDER BY LessonDate, StartTime";
-             return new LessonList(base.Select());
+            this.command.CommandText = $@"
+                SELECT tblLessons.*,
+                       TeacherUser.FirstName AS TeacherName,
+                       StudentUser.FirstName AS StudentName
+                FROM ((tblLessons
+                LEFT JOIN tblUsers AS TeacherUser ON tblLessons.TeacherId = TeacherUser.id)
+                LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                WHERE tblLessons.StudentId = {studentId}
+                ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
+            return new LessonList(base.Select());
         }
 
         public void BookLesson(Lesson lesson, int studentId)
         {
             lesson.StudentId = studentId;
             this.Update(lesson);
+        }
+
+        public LessonList GetTeacherScheduleWithStudents(int teacherId)
+        {
+            this.command.CommandText = $@"
+                SELECT tblLessons.*,
+                       StudentUser.FirstName AS StudentName
+                FROM (tblLessons
+                LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                WHERE tblLessons.TeacherId = {teacherId}
+                ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
+            return new LessonList(base.Select());
         }
     }
 }

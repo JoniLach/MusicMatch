@@ -27,8 +27,9 @@ namespace ViewModel
         public override string CreateInsertSQL(BaseEntity entity)
         {
             Notification notification = entity as Notification;
-            string dateStr = notification.CreatedAt.ToString("yyyy-MM-dd HH:mm:ss");
-            string sqlStr = $"INSERT INTO tblNotifications (UserId, Message, IsRead, CreatedAt) VALUES ({notification.UserId}, '{notification.Message}', False, #{dateStr}#)";
+            string dateStr = notification.CreatedAt.ToString("MM/dd/yyyy HH:mm:ss");
+            string message = notification.Message?.Replace("'", "''") ?? "";
+            string sqlStr = $"INSERT INTO tblNotifications (UserId, Message, IsRead, CreatedAt) VALUES ({notification.UserId}, '{message}', 0, #{dateStr}#)";
             return sqlStr;
         }
 
@@ -53,12 +54,17 @@ namespace ViewModel
 
         public void MarkAsRead(int notificationId)
         {
-             this.command.CommandText = $"UPDATE tblNotifications SET IsRead = 1 WHERE id = {notificationId}";
-             // We can use ExecuteNonQuery directly if we exposed it, or just use Update logic.
-             // Since base doesn't expose raw execute easily without NewEntity, let's just do a quick dirty update object
-             // Actually, BaseDB typically assumes we work with entities. 
-             // Let's rely on retrieving the obj, setting IsRead=true, and calling Update.
-             // But for efficiency, let's assume we can add raw execute later if needed. For now, let's just use Update.
+            try
+            {
+                this.connection.Open();
+                this.command.CommandText = $"UPDATE tblNotifications SET IsRead = True WHERE id = {notificationId}";
+                this.command.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (this.connection.State == System.Data.ConnectionState.Open)
+                    this.connection.Close();
+            }
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -38,6 +39,40 @@ namespace MusicMatch
             throw new NotImplementedException();
         }
     }   
+
+    public class InverseBoolConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return value is bool b && !b;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public class RateButtonVisibilityConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length < 3) return Visibility.Collapsed;
+            bool isBooked = values[0] is bool b && b;
+            DateTime lessonDate = values[1] is DateTime dt ? dt : DateTime.MaxValue;
+            int teacherRating = values[2] is int r ? r : 0;
+
+            bool isPast = lessonDate.Date < DateTime.Today;
+            bool notRated = teacherRating == 0;
+
+            return (isBooked && isPast && notRated) ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class PathToImageConverter : IValueConverter
     {

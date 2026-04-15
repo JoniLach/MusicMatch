@@ -105,25 +105,33 @@ namespace ViewModel
         }
         public void AddRating(int teacherId, int newRating)
         {
-            // Get current rating info
-            this.command.CommandText = $"SELECT Rating, AmountOfJobs FROM tblTeacher WHERE id = {teacherId}";
-            var list = base.Select();
-            if (list.Count > 0)
+            try
             {
-                Teacher teacher = list[0] as Teacher;
-                if (teacher != null)
+                this.connection.Open();
+
+                double currentRating = 0;
+                int jobs = 0;
+
+                this.command.CommandText = $"SELECT Rating, AmountOfJobs FROM tblTeacher WHERE id = {teacherId}";
+                using (var r = this.command.ExecuteReader())
                 {
-                    double currentRating = teacher.Rating;
-                    int jobs = teacher.AmountOfJobs;
-
-                    // Calculate new average
-                    double updatedRating = ((currentRating * jobs) + newRating) / (jobs + 1);
-                    int updatedJobs = jobs + 1;
-
-                    // Update DB
-                    this.command.CommandText = $"UPDATE tblTeacher SET Rating = {updatedRating}, AmountOfJobs = {updatedJobs} WHERE id = {teacherId}";
-                    this.command.ExecuteNonQuery();
+                    if (r.Read())
+                    {
+                        currentRating = Convert.ToDouble(r["Rating"]);
+                        jobs = (int)r["AmountOfJobs"];
+                    }
                 }
+
+                double updatedRating = jobs == 0 ? newRating : ((currentRating * jobs) + newRating) / (jobs + 1);
+                int updatedJobs = jobs + 1;
+
+                this.command.CommandText = $"UPDATE tblTeacher SET Rating = {updatedRating.ToString(System.Globalization.CultureInfo.InvariantCulture)}, AmountOfJobs = {updatedJobs} WHERE id = {teacherId}";
+                this.command.ExecuteNonQuery();
+            }
+            finally
+            {
+                if (this.connection.State == System.Data.ConnectionState.Open)
+                    this.connection.Close();
             }
         }
     }

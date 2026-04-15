@@ -27,7 +27,6 @@ namespace MusicMatch
         public StudentHomePage()
         {
             InitializeComponent();
-            InitializeComponent();
             LoadTeachers();
             DisplayUserInfo();
             LoadUpcoming();
