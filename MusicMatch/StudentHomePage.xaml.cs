@@ -70,16 +70,24 @@ namespace MusicMatch
         {
             if (sender is Button btn && btn.Tag is Lesson lesson)
             {
-                var dialog = new RateUserDialog(lesson.TeacherName);
+                var dialog = new RateUserDialog(lesson.TeacherName ?? "the teacher");
                 if (dialog.ShowDialog() == true)
                 {
                     try
                     {
                         TeacherDB teacherDB = new TeacherDB();
                         teacherDB.AddRating(lesson.TeacherId, dialog.SelectedRating);
+
+                        // Mark lesson as rated so the button is hidden on reload
+                        lesson.StudentRating = dialog.SelectedRating;
+                        LessonDB lessonDB = new LessonDB();
+                        lessonDB.Update(lesson);
+                        lessonDB.SaveChanges();
+
                         MessageBox.Show("Rating submitted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
-                        
-                        // Reload teachers to show updated rating
+
+                        // Reload to show updated rating badge and hide rate button
+                        LoadUpcoming();
                         LoadTeachers();
                     }
                     catch (Exception ex)

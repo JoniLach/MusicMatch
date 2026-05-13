@@ -185,11 +185,11 @@ namespace ViewModel
 
         public LessonList GetTeacherScheduleWithStudents(int teacherId)
         {
+            // Use correlated subquery instead of JOIN so NULL StudentId (open slots) still appear
             this.command.CommandText = $@"
                 SELECT tblLessons.*,
-                       StudentUser.FirstName AS StudentName
-                FROM (tblLessons
-                LEFT JOIN tblUsers AS StudentUser ON tblLessons.StudentId = StudentUser.id)
+                       (SELECT tblUsers.FirstName FROM tblUsers WHERE tblUsers.id = tblLessons.StudentId) AS StudentName
+                FROM tblLessons
                 WHERE tblLessons.TeacherId = {teacherId}
                 ORDER BY tblLessons.LessonDate, tblLessons.StartTime";
             return new LessonList(base.Select());
