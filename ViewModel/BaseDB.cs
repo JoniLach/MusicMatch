@@ -26,10 +26,17 @@ namespace ViewModel
         protected List<ChangeEntity> deleted;
         protected List<ChangeEntity> updated;
 
+        private static string _overriddenDbPath;
+
+        public static void SetDatabasePath(string absolutePath)
+        {
+            _overriddenDbPath = absolutePath;
+        }
+
         protected BaseDB()
         {
-            //this.connectionString = @"Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\NavAppDB.accdb;Persist Security Info=True;";
-            this.connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=..\\..\\..\\ViewModel\\MusicMatchDB.accdb;Persist Security Info=True;";
+            string dataSource = _overriddenDbPath ?? "..\\..\\..\\ViewModel\\MusicMatchDB.accdb";
+            this.connectionString = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source=" + dataSource + ";Persist Security Info=True;";
 
             this.connection = new OleDbConnection(this.connectionString);
             this.command = new OleDbCommand();

@@ -9,17 +9,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 msbuild MusicMatch.sln /p:Configuration=Debug /p:Platform="Any CPU"
 ```
 
-**Run:** Set `MusicMatch` as the startup project and run. Output binary: `MusicMatch/bin/Debug/MusicMatch.exe`
+**Run (WPF app):** Set `MusicMatch` as the startup project and run. Output binary: `MusicMatch/bin/Debug/MusicMatch.exe`
+
+**Run (Web API):** Set `WebServices` as the startup project and run. Serves on `http://localhost:50954/`. API docs available at `http://localhost:50954/Help`.
 
 **No test projects exist** in this solution.
 
 ## Project Structure
 
-This is a three-project Visual Studio solution targeting **.NET Framework 4.7.2**:
+This is a four-project Visual Studio solution targeting **.NET Framework 4.7.2**:
 
 - **`MusicMatch/`** — WPF application (XAML pages + code-behind, converters, image helper)
 - **`Model/`** — Domain entities (`User` (abstract) → `Student`/`Teacher`, `Lesson`, `Instrument`, `Notification`)
 - **`ViewModel/`** — Misleadingly named; this is the **Data Access Layer (DAL)**, not MVVM ViewModels. Contains `*DB.cs` classes and the Access database file.
+- **`WebServices/`** — ASP.NET Web API 5 (MVC 5) project exposing REST endpoints backed by the same Model and ViewModel projects.
 
 ## Architecture
 
@@ -42,3 +45,19 @@ Each entity has a corresponding `*DB` class inheriting from `BaseDB`, which prov
 **Image handling** is managed by `ImageHelper.cs`. Profile pictures are saved to the `MusicMatch/Images/` folder and stored in the DB as relative paths. The `PathToImageConverter` in `Converters.cs` resolves these for WPF binding.
 
 **UI theming** uses MaterialDesignThemes (dark theme, green/lime palette), configured globally in `App.xaml`.
+
+## Web API (WebServices project)
+
+**Stack:** ASP.NET Web API 5.2.9 + MVC 5, Newtonsoft.Json 13, running on IIS Express port 50954.
+
+**Route conventions:**
+- REST API: `api/{controller}/{id}` (attribute routing also enabled)
+- MVC views: `{controller}/{action}/{id}` (defaults to `HomeController/Index`)
+- Auto-generated docs: `/Help`
+
+**Controllers:**
+- `UserLoginController` — user authentication endpoint (in progress, not yet implemented)
+- `ValuesController` — sample CRUD template (can be removed or repurposed)
+- `HomeController` — serves the default MVC index view
+
+**Project references:** `WebServices` references both `Model` and `ViewModel`, so it shares domain entities and database access classes (OleDb → `MusicMatchDB.accdb`) with the WPF app. No duplicate DB logic needed.

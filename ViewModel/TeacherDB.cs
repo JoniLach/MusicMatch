@@ -92,6 +92,20 @@ namespace ViewModel
             return null;
         }
 
+        public Teacher GetById(int id)
+        {
+            this.command.CommandText = $@"
+                SELECT  tblUsers.id, tblUsers.Username, tblUsers.[Password], tblUsers.Email,
+                        tblUsers.FirstName, tblUsers.LastName, tblUsers.City, tblUsers.ProfilePicture,
+                        tblTeacher.Rating, tblTeacher.Price, tblTeacher.AmountOfJobs, tblTeacher.Description
+                FROM    tblTeacher
+                INNER JOIN tblUsers ON tblTeacher.id = tblUsers.id
+                WHERE   tblUsers.id = {id}";
+
+            var list = new TeacherList(base.Select());
+            return list.Count > 0 ? list[0] : null;
+        }
+
         public TeacherList SelectAll()
         {
             this.command.CommandText = @"

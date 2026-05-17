@@ -1,13 +1,2 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Web.Http;
-
-namespace WebServices.Controllers
-{
-    public class UserLoginController : ApiController
-    {
-    }
-}
+// This controller is superseded by TeacherController and StudentController.
+// Kept as an empty file to avoid breaking any existing project references.

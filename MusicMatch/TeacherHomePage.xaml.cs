@@ -30,6 +30,16 @@ namespace MusicMatch
 
         private void LoadTeacherData()
         {
+            if (currentTeacher == null) return;
+
+            // Refresh from DB so ratings/jobs reflect changes made by students
+            var fresh = new TeacherDB().GetById(currentTeacher.Id);
+            if (fresh != null)
+            {
+                currentTeacher = fresh;
+                MainWindow.LoggedInUser = fresh;
+            }
+
             if (currentTeacher != null)
             {
                 // Welcome message
@@ -181,14 +191,21 @@ namespace MusicMatch
         {
             if (sender is Button btn && btn.Tag is Lesson lesson)
             {
-                var dialog = new RateUserDialog(lesson.StudentName);
+                var dialog = new RateUserDialog(lesson.StudentName ?? "the student");
                 if (dialog.ShowDialog() == true)
                 {
                     try
                     {
                         StudentDB studentDB = new StudentDB();
                         studentDB.AddRating(lesson.StudentId, dialog.SelectedRating);
+
+                        lesson.TeacherRating = dialog.SelectedRating;
+                        LessonDB lessonDB = new LessonDB();
+                        lessonDB.Update(lesson);
+                        lessonDB.SaveChanges();
+
                         MessageBox.Show("Student rating submitted successfully!", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
+                        LoadUpcomingSessions();
                     }
                     catch (Exception ex)
                     {
